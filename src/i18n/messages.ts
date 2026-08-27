@@ -109,10 +109,10 @@ const zh: Messages = {
 }
 
 const en: Messages = {
-  'nav.collections': 'Collections',
+  'nav.collections': 'Lookbook',
   'nav.stores': 'Stores',
   'nav.brand': 'Brand',
-  'nav.viewAll': 'All collections',
+  'nav.viewAll': 'All lookbooks',
   'nav.about': 'Brand',
   'nav.contact': 'WeChat',
   'nav.home': 'SYW Home',
@@ -121,7 +121,7 @@ const en: Messages = {
   'nav.lang': 'Language',
 
   'footer.pages': 'Pages',
-  'footer.collections': 'Collections',
+  'footer.collections': 'Lookbook',
   'footer.brand': 'Brand',
   'footer.stores': 'Stores',
   'footer.contactUs': 'Contact us',
@@ -165,10 +165,10 @@ const en: Messages = {
   'home.readMore': 'The brand',
 
   'collections.eyebrow': 'SYW',
-  'collections.title': 'Collections',
+  'collections.title': 'Lookbook',
   'collections.lede': 'Silhouette you can see. Breath you can feel.',
   'collections.open': 'View',
-  'collections.all': 'All collections',
+  'collections.all': 'All lookbooks',
   'collections.findStore': 'Stores',
   'collections.footer': '',
 
