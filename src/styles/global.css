@@ -714,7 +714,7 @@ p {
   }
 
   .hero--scrollfilm .hero-sticky {
-    height: min(74svh, 38rem);
+    height: calc(100svh - var(--nav-h));
     top: var(--nav-h);
   }
 
