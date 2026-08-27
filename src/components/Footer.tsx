@@ -20,8 +20,9 @@ export function Footer() {
         <div className="footer-col">
           <nav className="footer-links" aria-label={t('footer.pages')}>
             <Link to="/collections">{t('footer.collections')}</Link>
-            <Link to="/brand">{t('footer.brand')}</Link>
+            <Link to="/films">{t('footer.films')}</Link>
             <Link to="/stores">{t('footer.stores')}</Link>
+            <Link to="/brand">{t('footer.brand')}</Link>
             <Link to="/contact">{t('footer.contactUs')}</Link>
           </nav>
         </div>

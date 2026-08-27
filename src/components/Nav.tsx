@@ -11,6 +11,8 @@ export function Nav() {
 
   const links = [
     { to: '/collections', label: t('nav.collections') },
+    { to: '/films', label: t('nav.films') },
+    { to: '/stores', label: t('nav.stores') },
     { to: '/brand', label: t('nav.brand') },
   ]
 

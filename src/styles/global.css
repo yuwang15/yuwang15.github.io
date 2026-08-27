@@ -1951,6 +1951,10 @@ a.home-shot {
   gap: clamp(1.25rem, 3vw, 2.25rem);
 }
 
+.films-page-grid {
+  margin-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
 .brand-film-card {
   display: grid;
   gap: 1rem;

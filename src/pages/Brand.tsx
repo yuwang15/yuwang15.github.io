@@ -1,6 +1,4 @@
-import { Link } from 'react-router-dom'
 import { BrandMark } from '../components/BrandMark'
-import { brandFilms } from '../data/campaigns'
 import { stores } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
 
@@ -14,7 +12,7 @@ const brandVisuals = {
 }
 
 export function Brand() {
-  const { t, L } = useLocale()
+  const { t } = useLocale()
 
   return (
     <>
@@ -99,46 +97,6 @@ export function Brand() {
               alt={t('brand.altStore')}
             />
           </figure>
-        </div>
-      </section>
-
-      <section className="brand-film-block" id="film">
-        <div className="container">
-          <h2 className="brand-films-title">{t('brand.films.title')}</h2>
-          <div className="brand-films-grid">
-            {brandFilms.map((film) => (
-              <article key={film.slug} className="brand-film-card">
-                <div className="brand-film-media">
-                  <video
-                    controls
-                    playsInline
-                    preload="metadata"
-                    poster={film.poster}
-                  >
-                    <source src={film.src} type="video/mp4" />
-                  </video>
-                </div>
-                <div className="brand-film-copy">
-                  <h3>{L(film.title)}</h3>
-                  <p className="campaign-video-summary">{L(film.summary)}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="brand-store-entry" id="stores">
-        <div className="container">
-          <Link
-            to="/stores"
-            className="brand-store-entry-media brand-store-entry-full"
-          >
-            <img src={`${stores[0].cover}?v=store`} alt="" />
-            <div className="brand-store-entry-label">
-              <span>{t('stores.title')}</span>
-            </div>
-          </Link>
         </div>
       </section>
     </>

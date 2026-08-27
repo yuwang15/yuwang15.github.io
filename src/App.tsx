@@ -6,6 +6,7 @@ import { Brand } from './pages/Brand'
 import { CollectionDetail } from './pages/CollectionDetail'
 import { Collections } from './pages/Collections'
 import { Contact } from './pages/Contact'
+import { Films } from './pages/Films'
 import { Home } from './pages/Home'
 import { StoreDetail } from './pages/StoreDetail'
 import { Stores } from './pages/Stores'
@@ -21,12 +22,13 @@ export default function App() {
             <Route path="/" element={<Home />} />
             <Route path="/collections" element={<Collections />} />
             <Route path="/collections/:slug" element={<CollectionDetail />} />
+            <Route path="/films" element={<Films />} />
             <Route path="/stores" element={<Stores />} />
             <Route path="/stores/:slug" element={<StoreDetail />} />
             <Route path="/brand" element={<Brand />} />
             <Route path="/contact" element={<Contact />} />
-            <Route path="/campaign" element={<Navigate to="/brand#film" replace />} />
-            <Route path="/media" element={<Navigate to="/brand#film" replace />} />
+            <Route path="/campaign" element={<Navigate to="/films" replace />} />
+            <Route path="/media" element={<Navigate to="/films" replace />} />
             <Route path="/about" element={<Navigate to="/brand" replace />} />
             <Route path="/story" element={<Navigate to="/brand" replace />} />
             <Route path="/wechat" element={<Navigate to="/contact" replace />} />

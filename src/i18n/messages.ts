@@ -4,10 +4,11 @@ type Messages = Record<string, string>
 
 const zh: Messages = {
   'nav.collections': 'Lookbook',
+  'nav.films': '品牌视频',
   'nav.stores': '门店',
-  'nav.brand': '品牌',
+  'nav.brand': '关于我们',
   'nav.viewAll': '全部 Lookbook',
-  'nav.about': '品牌',
+  'nav.about': '关于我们',
   'nav.contact': '微信',
   'nav.home': 'SYW 首页',
   'nav.open': '打开菜单',
@@ -16,7 +17,8 @@ const zh: Messages = {
 
   'footer.pages': '页面',
   'footer.collections': 'Lookbook',
-  'footer.brand': '品牌',
+  'footer.films': '品牌视频',
+  'footer.brand': '关于我们',
   'footer.stores': '门店',
   'footer.contactUs': '联系我们',
   'footer.wechat': '微信',
@@ -24,7 +26,7 @@ const zh: Messages = {
   'footer.explore': '页面',
   'footer.contact': '微信',
   'footer.location': '门店',
-  'footer.film': '视频',
+  'footer.film': '品牌视频',
   'footer.tag': '穿得好看，也穿得自在。',
   'footer.contactHint': '微信',
   'footer.qr': '微信二维码占位',
@@ -71,7 +73,7 @@ const zh: Messages = {
   'stores.back': '门店',
   'stores.footer': '预约请联系微信',
 
-  'brand.eyebrow': '品牌',
+  'brand.eyebrow': '关于我们',
   'brand.about': '关于 SYW',
   'brand.p1':
     'SYW 的成衣与配饰始终以卓越品质与持久设计为核心。',
@@ -92,6 +94,8 @@ const zh: Messages = {
     '留一点自己。在端庄里呼吸，在规矩里仍有余地——不必张扬，却也不必收得太干净。',
   'brand.films.eyebrow': '视频',
   'brand.films.title': '品牌视频',
+  'films.title': '品牌视频',
+  'films.lede': '看衣裳怎样被光线慢慢说清楚。',
   'brand.contactLabel': '联系',
   'brand.contactTitle': '联系',
   'brand.contactHint': '添加微信，预约到店或了解本季。',
@@ -110,10 +114,11 @@ const zh: Messages = {
 
 const en: Messages = {
   'nav.collections': 'Lookbook',
+  'nav.films': 'Film',
   'nav.stores': 'Stores',
-  'nav.brand': 'Brand',
+  'nav.brand': 'About',
   'nav.viewAll': 'All lookbooks',
-  'nav.about': 'Brand',
+  'nav.about': 'About',
   'nav.contact': 'WeChat',
   'nav.home': 'SYW Home',
   'nav.open': 'Open menu',
@@ -122,7 +127,8 @@ const en: Messages = {
 
   'footer.pages': 'Pages',
   'footer.collections': 'Lookbook',
-  'footer.brand': 'Brand',
+  'footer.films': 'Film',
+  'footer.brand': 'About',
   'footer.stores': 'Stores',
   'footer.contactUs': 'Contact us',
   'footer.wechat': 'WeChat',
@@ -178,7 +184,7 @@ const en: Messages = {
   'stores.back': 'Stores',
   'stores.footer': 'Appointments via WeChat',
 
-  'brand.eyebrow': 'Brand',
+  'brand.eyebrow': 'About',
   'brand.about': 'About SYW',
   'brand.p1':
     'SYW offers a wardrobe of ready-to-wear and accessories rooted in exceptional quality and lasting design.',
@@ -199,6 +205,8 @@ const en: Messages = {
     'Keep a little of yourself. Breath inside composure; room inside the rule—no need to shout, and no need to tidy everything away.',
   'brand.films.eyebrow': 'Film',
   'brand.films.title': 'Brand film',
+  'films.title': 'Film',
+  'films.lede': 'How light slowly tells the clothes.',
   'brand.contactLabel': 'Contact',
   'brand.contactTitle': 'Contact',
   'brand.contactHint': 'Add us on WeChat to book a visit or ask about the season.',
