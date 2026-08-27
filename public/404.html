@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <title>SYW</title>
+    <script>
+      // GitHub Pages SPA fallback → send deep links back to the React router
+      sessionStorage.setItem('syw-spa-redirect', location.pathname + location.search + location.hash)
+      location.replace('/')
+    </script>
+  </head>
+  <body></body>
+</html>
