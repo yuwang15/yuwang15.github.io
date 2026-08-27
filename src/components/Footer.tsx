@@ -1,12 +1,11 @@
 import { Link } from 'react-router-dom'
 import { BrandMark } from './BrandMark'
-import { stores } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
 
 const year = new Date().getFullYear()
 
 export function Footer() {
-  const { t, L } = useLocale()
+  const { t } = useLocale()
 
   return (
     <footer className="footer">
@@ -19,29 +18,15 @@ export function Footer() {
         </div>
 
         <div className="footer-col">
-          <p className="footer-col-title">{t('footer.explore')}</p>
-          <nav className="footer-links" aria-label={t('footer.explore')}>
-            <Link to="/collections">{t('nav.collections')}</Link>
-            <Link to="/brand">{t('nav.about')}</Link>
-            <Link to="/brand#film">{t('footer.film')}</Link>
-            <a href="#contact">{t('nav.contact')}</a>
-          </nav>
-        </div>
-
-        <div className="footer-col">
-          <p className="footer-col-title">{t('footer.location')}</p>
-          <nav className="footer-links" aria-label={t('footer.location')}>
-            <Link to="/stores">{t('stores.title')}</Link>
-            {stores.map((store) => (
-              <Link key={store.slug} to={`/stores/${store.slug}`}>
-                {L(store.title)}
-              </Link>
-            ))}
+          <nav className="footer-links" aria-label={t('footer.pages')}>
+            <Link to="/collections">{t('footer.collections')}</Link>
+            <Link to="/brand">{t('footer.brand')}</Link>
+            <Link to="/stores">{t('footer.stores')}</Link>
           </nav>
         </div>
 
         <div className="footer-col" id="contact">
-          <p className="footer-col-title">{t('footer.contact')}</p>
+          <p className="footer-col-title">{t('footer.wechat')}</p>
           <div className="footer-social">
             <div className="footer-social-block">
               <p>{t('brand.wechat.a')}</p>

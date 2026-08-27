@@ -452,7 +452,7 @@ p {
 
 .footer-grid {
   display: grid;
-  grid-template-columns: 1.35fr repeat(3, minmax(0, 1fr));
+  grid-template-columns: 1.4fr 0.9fr 1.3fr;
   gap: clamp(2rem, 5vw, 3.5rem);
   align-items: start;
 }

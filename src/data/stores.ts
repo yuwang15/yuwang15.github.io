@@ -2,12 +2,10 @@ import type { LocalizedString } from '../i18n/types'
 
 export type Store = {
   slug: string
-  /** Atmosphere title — never a city / mall name */
   title: LocalizedString
   summary: LocalizedString
   cover: string
   images: string[]
-  /** Practical visit note — kept quiet, not the headline */
   visitNote?: LocalizedString
 }
 
@@ -17,7 +15,7 @@ const storeImages = (slug: string, count: number) =>
 export const stores: Store[] = [
   {
     slug: 'rugao-wuyue',
-    title: { zh: '洞石与橱窗', en: 'Stone & Window' },
+    title: { zh: '如皋吾悦', en: 'Rugao Wuyue' },
     summary: {
       zh: '门头沉静，橱窗柔亮。走进去，衣裳沿墙慢慢排开，光线落在面料上，不急着说话。',
       en: 'A quiet facade, a soft-lit window. Inside, clothes line the walls slowly—light lands on cloth before anyone speaks.',
@@ -31,7 +29,7 @@ export const stores: Store[] = [
   },
   {
     slug: 'xiruncheng',
-    title: { zh: '留白的陈列', en: 'Room to Breathe' },
+    title: { zh: '洗润城', en: 'Xiruncheng' },
     summary: {
       zh: '中性色墙面托住剪裁。每一件衣裳旁边都留一点空，好让你看清楚，也慢慢试。',
       en: 'Neutral walls hold the cut. Each piece keeps a little air beside it—so you can see clearly, and try without hurry.',
@@ -45,7 +43,7 @@ export const stores: Store[] = [
   },
   {
     slug: 'haian-hengtian',
-    title: { zh: '柔光与动线', en: 'Light & Path' },
+    title: { zh: '海安恒天', en: 'Haian Hengtian' },
     summary: {
       zh: '动线开阔，灯光柔和。衣裳是焦点，空间只负责安静地托住它们，让人愿意多停一会儿。',
       en: 'Open flow, soft light. Clothes are the focus; the room simply holds them—so you want to stay a little longer.',
