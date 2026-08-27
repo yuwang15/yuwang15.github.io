@@ -3,6 +3,7 @@ import type { Collection } from './collections'
 /** Public-facing curated frames — never dump the full archive */
 const PICKS: Record<string, number[]> = {
   // 9 frames → complete mosaic, no leftover cell
+  aw26: [0, 8, 16, 28, 42, 58, 76, 98, 120],
   ss26: [0, 4, 7, 11, 15, 19, 23, 27, 33],
   aw25: [2, 12, 22, 34, 48, 62, 78, 96, 118],
   resort26: [1, 6, 11, 16, 21, 26, 31, 36, 41],
@@ -10,6 +11,7 @@ const PICKS: Record<string, number[]> = {
 
 /** Home: pin rounds + full rows — need enough frames */
 const HOME_PICKS: Record<string, number[]> = {
+  aw26: [4, 12, 22, 36, 8, 18, 28, 48, 2, 14, 24, 40, 56, 72],
   ss26: [4, 11, 19, 27, 7, 15, 23, 33, 0, 8, 12, 18, 22, 30],
 }
 
