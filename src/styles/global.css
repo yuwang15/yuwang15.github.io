@@ -2777,6 +2777,57 @@ a.home-shot {
   margin-top: 0.35rem;
 }
 
+.contact-addresses {
+  margin-top: 0.75rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line);
+  display: grid;
+  gap: 0.85rem;
+}
+
+.contact-addresses-label {
+  margin: 0;
+  text-align: center;
+  font-size: 0.72rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-muted);
+}
+
+.contact-addresses ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.contact-addresses a {
+  display: grid;
+  gap: 0.2rem;
+  text-align: center;
+  font-weight: 300;
+  color: var(--color-ink);
+  text-decoration: underline;
+  text-underline-offset: 0.28em;
+  text-decoration-color: rgba(17, 17, 17, 0.28);
+}
+
+.contact-addresses a:hover {
+  text-decoration-color: rgba(17, 17, 17, 0.7);
+}
+
+.contact-addresses strong {
+  font-weight: 500;
+  font-size: 0.92rem;
+}
+
+.contact-addresses span {
+  font-size: 0.82rem;
+  color: var(--color-muted);
+  text-decoration: none;
+}
+
 .contact-store-link {
   display: block;
   text-align: center;

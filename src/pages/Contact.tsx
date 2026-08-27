@@ -1,6 +1,7 @@
-import { FormEvent, useState } from 'react'
+import { FormEvent, useState, type ChangeEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { brandFilms } from '../data/campaigns'
+import { stores } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
 
 type FormState = {
@@ -26,7 +27,7 @@ const phoneOk = (value: string) => {
 }
 
 export function Contact() {
-  const { t } = useLocale()
+  const { t, L } = useLocale()
   const film = brandFilms[0]
   const [form, setForm] = useState<FormState>(empty)
   const [error, setError] = useState('')
@@ -34,7 +35,7 @@ export function Contact() {
 
   const onChange =
     (key: keyof FormState) =>
-    (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       setForm((prev) => ({ ...prev, [key]: event.target.value }))
       if (error) setError('')
     }
@@ -170,9 +171,23 @@ export function Contact() {
                 {t('contact.send')}
               </button>
 
-              <Link className="contact-store-link" to="/stores">
-                {t('contact.bookStore')}
-              </Link>
+              <div className="contact-addresses">
+                <p className="contact-addresses-label">{t('contact.addresses')}</p>
+                <ul>
+                  {stores.map((store) => (
+                    <li key={store.slug}>
+                      <a
+                        href={store.mapUrl}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        <strong>{L(store.title)}</strong>
+                        <span>{L(store.address)}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </form>
           )}
         </div>
