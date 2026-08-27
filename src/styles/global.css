@@ -589,7 +589,7 @@ p {
 }
 
 /*
-  Scroll film: short track + sticky cinematic window.
+  Scroll film: full-bleed sticky stage (no letterbox bars).
   object-position pans so more of the portrait becomes visible.
 */
 .hero--scrollfilm {
@@ -600,7 +600,7 @@ p {
   position: sticky;
   top: var(--nav-h);
   height: calc(100svh - var(--nav-h));
-  max-height: min(72vh, 40rem);
+  max-height: none;
   margin-top: 0;
   overflow: hidden;
   display: grid;
@@ -608,9 +608,8 @@ p {
 }
 
 .hero--scrollfilm .hero-sticky {
-  /* Keep cinematic proportion inside the sticky stage */
-  height: min(68vh, 36rem);
-  top: calc(var(--nav-h) + max(0px, (100svh - var(--nav-h) - min(68vh, 36rem)) / 2));
+  height: calc(100svh - var(--nav-h));
+  top: var(--nav-h);
 }
 
 .hero-film-stage {
