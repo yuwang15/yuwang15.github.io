@@ -3,11 +3,11 @@ import type { Locale } from './types'
 type Messages = Record<string, string>
 
 const zh: Messages = {
-  'nav.collections': 'Lookbook',
+  'nav.collections': '系列',
   'nav.films': '品牌视频',
   'nav.stores': '门店',
   'nav.brand': '关于我们',
-  'nav.viewAll': '全部 Lookbook',
+  'nav.viewAll': '全部系列',
   'nav.about': '关于我们',
   'nav.contact': '微信',
   'nav.home': 'SYW 首页',
@@ -16,7 +16,7 @@ const zh: Messages = {
   'nav.lang': '语言',
 
   'footer.pages': '页面',
-  'footer.collections': 'Lookbook',
+  'footer.collections': '系列',
   'footer.films': '品牌视频',
   'footer.brand': '关于我们',
   'footer.stores': '门店',
@@ -60,10 +60,10 @@ const zh: Messages = {
   'home.readMore': '了解品牌',
 
   'collections.eyebrow': 'SYW',
-  'collections.title': 'Lookbook',
+  'collections.title': '系列',
   'collections.lede': '看得到轮廓，也看得到呼吸。',
   'collections.open': '查看',
-  'collections.all': '全部 Lookbook',
+  'collections.all': '全部系列',
   'collections.findStore': '门店',
   'collections.footer': '',
 
