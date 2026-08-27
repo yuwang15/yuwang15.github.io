@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "oxlint",
     "preview": "vite preview",
-    "images:stores": "python3 scripts/build-store-listing-images.py"
+    "images:stores": "python3 scripts/build-store-listing-images.py",
+    "images:responsive": "python3 scripts/build-responsive-images.py"
   },
   "dependencies": {
     "framer-motion": "^13.0.0",

@@ -1,0 +1,21 @@
+.git
+public/assets/_orient
+
+# Masters are replaced at runtime by high-quality .rsp WebP (q=90).
+# Keep local masters for editing; do not upload them to the CDN.
+public/assets/collections/**/*.jpg
+public/assets/collections/**/*.JPG
+public/assets/collections/**/*.jpeg
+public/assets/stores/**/*.jpg
+public/assets/stores/**/*.JPG
+!public/assets/stores/**/derived/**
+public/assets/services/**/*.jpg
+public/assets/mood/**/*.jpg
+public/assets/hero*.jpg
+public/assets/brand-*.jpg
+public/assets/video-still.jpg
+public/assets/video-poster.jpg
+
+# Unused hero video cuts
+public/assets/hero-portrait.mp4
+public/assets/hero-landscape.mp4

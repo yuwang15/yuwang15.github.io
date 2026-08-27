@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { BrandMark } from '../components/BrandMark'
+import { ResponsiveImage } from '../components/ResponsiveImage'
 import { useLocale } from '../i18n/LocaleContext'
 
 /** Brand philosophy visuals — lookbook / film only, never store interiors */
@@ -117,7 +118,7 @@ export function Brand() {
         <div className="container brand-mood-grid">
           {toneStudies.map(({ src, letter, name }) => (
             <figure key={src} className="brand-mood-item">
-              <img src={src} alt={t(name)} loading="lazy" />
+              <ResponsiveImage src={src} alt={t(name)} loading="lazy" sizes="third" />
               <figcaption>
                 <span className="brand-mood-letter" aria-hidden>
                   {letter}
@@ -133,7 +134,12 @@ export function Brand() {
         <div className="brand-visuals-grid brand-visuals-grid--lookbook">
           {brandStills.map((src) => (
             <figure key={src} className="brand-visual is-look">
-              <img src={src} alt={t('brand.altDetail')} loading="lazy" />
+              <ResponsiveImage
+                src={src}
+                alt={t('brand.altDetail')}
+                loading="lazy"
+                sizes="third"
+              />
             </figure>
           ))}
         </div>

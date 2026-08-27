@@ -1,4 +1,5 @@
 import { useState, type SyntheticEvent } from 'react'
+import { ResponsiveImage } from './ResponsiveImage'
 
 export type Orient = 'landscape' | 'portrait' | 'square'
 
@@ -15,6 +16,7 @@ type OrientFigureProps = {
   alt?: string
   className?: string
   loading?: 'eager' | 'lazy'
+  sizes?: 'full' | 'half' | 'third' | 'card'
   /** Extra class prefix wrapper — defaults to edit-mosaic-item */
   asMosaic?: boolean
 }
@@ -28,6 +30,7 @@ export function OrientFigure({
   alt = '',
   className,
   loading = 'lazy',
+  sizes = 'half',
   asMosaic = true,
 }: OrientFigureProps) {
   const [orient, setOrient] = useState<Orient>('portrait')
@@ -42,7 +45,13 @@ export function OrientFigure({
 
   return (
     <figure className={merged}>
-      <img src={src} alt={alt} loading={loading} onLoad={onLoad} />
+      <ResponsiveImage
+        src={src}
+        alt={alt}
+        loading={loading}
+        sizes={sizes}
+        onLoad={onLoad}
+      />
     </figure>
   )
 }
@@ -52,6 +61,7 @@ type OrientImgProps = {
   alt?: string
   loading?: 'eager' | 'lazy'
   className?: string
+  sizes?: 'full' | 'half' | 'third' | 'card'
   onOrient?: (orient: Orient) => void
 }
 
@@ -61,6 +71,7 @@ export function OrientImg({
   alt = '',
   loading = 'lazy',
   className,
+  sizes = 'full',
   onOrient,
 }: OrientImgProps) {
   const onLoad = (event: SyntheticEvent<HTMLImageElement>) => {
@@ -71,11 +82,12 @@ export function OrientImg({
   }
 
   return (
-    <img
+    <ResponsiveImage
       src={src}
       alt={alt}
       loading={loading}
       className={className}
+      sizes={sizes}
       onLoad={onLoad}
     />
   )

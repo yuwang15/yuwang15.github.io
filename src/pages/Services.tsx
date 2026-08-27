@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
+import { ResponsiveImage } from '../components/ResponsiveImage'
 import { useLocale } from '../i18n/LocaleContext'
 
 const faqKeys = ['walkin', 'wechat', 'exchange'] as const
@@ -13,11 +14,12 @@ export function Services() {
     <div className="page services-page">
       <header className="services-hero">
         <div className="services-hero-media">
-          <img
+          <ResponsiveImage
             src="/assets/services/services-visit.jpg"
             alt=""
             loading="eager"
-            decoding="async"
+            fetchPriority="high"
+            sizes="hero"
           />
         </div>
         <div className="services-hero-copy container">
@@ -31,11 +33,11 @@ export function Services() {
         <section className="services-paths" aria-label={t('services.paths.label')}>
           <article className="services-path">
             <div className="services-path-media">
-              <img
+              <ResponsiveImage
                 src="/assets/services/services-online.jpg"
                 alt=""
                 loading="lazy"
-                decoding="async"
+                sizes="half"
               />
             </div>
             <div className="services-path-copy">
@@ -49,11 +51,11 @@ export function Services() {
 
           <article className="services-path">
             <div className="services-path-media">
-              <img
+              <ResponsiveImage
                 src="/assets/services/services-instore.jpg"
                 alt=""
                 loading="lazy"
-                decoding="async"
+                sizes="half"
               />
             </div>
             <div className="services-path-copy">
@@ -81,11 +83,11 @@ export function Services() {
 
         <section className="services-visit" aria-labelledby="services-visit">
           <div className="services-visit-media">
-            <img
+            <ResponsiveImage
               src="/assets/stores/haian-hengtian/3.jpg"
               alt=""
               loading="lazy"
-              decoding="async"
+              sizes="half"
             />
           </div>
           <div className="services-visit-copy">

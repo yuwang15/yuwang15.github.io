@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom'
+import { ResponsiveImage } from '../components/ResponsiveImage'
 import { collections } from '../data/collections'
 import { getCollectionBandShots } from '../data/picks'
 import { useLocale } from '../i18n/LocaleContext'
@@ -41,17 +42,19 @@ export function Collections() {
                 <div className="edit-band-visual">
                   {hero ? (
                     <figure className="edit-band-hero">
-                      <img
+                      <ResponsiveImage
                         src={hero}
                         alt={item.title}
                         loading={index === 0 ? 'eager' : 'lazy'}
+                        fetchPriority={index === 0 ? 'high' : 'auto'}
+                        sizes="card"
                       />
                     </figure>
                   ) : null}
                   <div className="edit-band-stack">
                     {accents.map((src) => (
                       <figure key={src}>
-                        <img src={src} alt="" loading="lazy" />
+                        <ResponsiveImage src={src} alt="" loading="lazy" sizes="third" />
                       </figure>
                     ))}
                   </div>

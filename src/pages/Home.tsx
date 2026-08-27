@@ -8,6 +8,7 @@ import {
   useTransform,
 } from 'framer-motion'
 import { HeroMedia } from '../components/HeroMedia'
+import { ResponsiveImage } from '../components/ResponsiveImage'
 import { brandFilms } from '../data/campaigns'
 import { getHomeSections } from '../data/picks'
 import { useHomeSceneSnap } from '../hooks/useHomeSceneSnap'
@@ -27,7 +28,7 @@ function Shot({
   return (
     <div className={`home-shot${className ? ` ${className}` : ''}`}>
       <Link to={to}>
-        <img src={src} alt="" loading={loading} />
+        <ResponsiveImage src={src} alt="" loading={loading} sizes="half" />
       </Link>
     </div>
   )
@@ -235,7 +236,12 @@ export function Home() {
                   to={`/collections/${section.shot.slug}`}
                   className="home-look-banner-link"
                 >
-                  <img src={section.shot.src} alt="" loading="eager" />
+                  <ResponsiveImage
+                    src={section.shot.src}
+                    alt=""
+                    loading="lazy"
+                    sizes="full"
+                  />
                 </Link>
               </div>
             ) : (

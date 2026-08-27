@@ -23,6 +23,10 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - name: Trim unused heavy assets
+        run: |
+          rm -rf public/assets/_orient
+          rm -f public/assets/hero-portrait.mp4 public/assets/hero-landscape.mp4
       - run: npm ci
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3

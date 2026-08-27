@@ -22,3 +22,7 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+.vercel
+
+# Generated locally for fast loading; regenerate with: npm run images:responsive
+public/assets/.rsp/

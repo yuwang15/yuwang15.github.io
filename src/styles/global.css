@@ -1086,14 +1086,26 @@ p {
   background: #0a0a0a;
 }
 
-.hero-media--single > img {
+.hero-media--single > img,
+.hero-media--single > picture {
   position: absolute;
   inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.hero-media--single > picture > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   object-position: center 28%;
   display: block;
+}
+
+.hero-media--single > img {
+  object-fit: cover;
+  object-position: center 28%;
 }
 
 .hero-veil {
@@ -4174,3 +4186,21 @@ a.home-shot {
     max-height: none;
   }
 }
+
+
+/* picture wrappers should not affect layout; img keeps existing rules */
+.home-look-banner picture,
+.home-shot picture,
+.edit-mosaic-item picture,
+.edit-run-frame picture,
+.edit-band-hero picture,
+.edit-band-stack figure picture,
+.brand-mood-item picture,
+.brand-visual picture,
+.about-intro-media picture,
+.services-hero-media picture,
+.services-path-media picture,
+.services-visit-media picture {
+  display: contents;
+}
+

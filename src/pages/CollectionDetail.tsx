@@ -1,5 +1,6 @@
 import { Fragment, type CSSProperties } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { ResponsiveImage } from '../components/ResponsiveImage'
 import { getCollection, type MoodInsert } from '../data/collections'
 import {
   getEditorialShots,
@@ -24,7 +25,12 @@ function Frame({
       className="edit-run-frame"
       style={{ flexGrow: grow, '--frame-ratio': shot.ratio } as CSSProperties}
     >
-      <img src={shot.src} alt="" loading={eager ? 'eager' : 'lazy'} />
+      <ResponsiveImage
+        src={shot.src}
+        alt=""
+        loading={eager ? 'eager' : 'lazy'}
+        sizes="half"
+      />
     </figure>
   )
 }
@@ -42,10 +48,11 @@ function MoodRow({ insert, eager }: { insert: MoodInsert; eager: boolean }) {
           className="edit-run-frame"
           style={{ flexGrow: study.ratio, '--frame-ratio': study.ratio } as CSSProperties}
         >
-          <img
+          <ResponsiveImage
             src={study.src}
             alt={L(study.caption)}
             loading={eager ? 'eager' : 'lazy'}
+            sizes="half"
           />
         </figure>
       ))}
