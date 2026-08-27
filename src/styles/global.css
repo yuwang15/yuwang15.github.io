@@ -518,6 +518,12 @@ p {
   font-weight: 300;
 }
 
+.footer-social-handle {
+  margin: 0.55rem 0 0 !important;
+  color: var(--color-ink) !important;
+  letter-spacing: 0.04em;
+}
+
 .footer-qr {
   width: 8.5rem;
   aspect-ratio: 1;
@@ -528,20 +534,6 @@ p {
   letter-spacing: 0.18em;
   background: var(--color-surface);
   font-size: 0.85rem;
-}
-
-.footer-douyin {
-  margin: 1.25rem 0 0;
-  display: grid;
-  gap: 0.25rem;
-  font-size: 0.85rem;
-  font-weight: 300;
-  color: var(--color-muted);
-}
-
-.footer-douyin-id {
-  color: var(--color-ink);
-  letter-spacing: 0.04em;
 }
 
 .footer-bottom {
