@@ -60,7 +60,7 @@ export function CollectionDetail() {
 
         <div className="detail-footer">
           {t('collections.footer') ? <p>{t('collections.footer')}</p> : <span />}
-          <Link className="btn" to="/brand#contact">
+          <Link className="btn" to="/#contact">
             {t('brand.contactLabel')}
           </Link>
         </div>

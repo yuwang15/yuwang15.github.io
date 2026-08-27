@@ -24,7 +24,7 @@ export function Footer() {
             <Link to="/collections">{t('nav.collections')}</Link>
             <Link to="/brand">{t('nav.about')}</Link>
             <Link to="/brand#film">{t('footer.film')}</Link>
-            <Link to="/brand#contact">{t('nav.contact')}</Link>
+            <a href="#contact">{t('nav.contact')}</a>
           </nav>
         </div>
 
@@ -40,7 +40,7 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="footer-col">
+        <div className="footer-col" id="contact">
           <p className="footer-col-title">{t('footer.contact')}</p>
           <div className="footer-social">
             <div className="footer-social-block">

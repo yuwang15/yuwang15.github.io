@@ -29,7 +29,7 @@ export default function App() {
             <Route path="/story" element={<Navigate to="/brand" replace />} />
             <Route
               path="/wechat"
-              element={<Navigate to="/brand#contact" replace />}
+              element={<Navigate to="/#contact" replace />}
             />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>

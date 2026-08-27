@@ -141,28 +141,6 @@ export function Brand() {
           </Link>
         </div>
       </section>
-
-      <section className="brand-contact" id="contact">
-        <div className="container">
-          <p className="eyebrow">{t('brand.contactLabel')}</p>
-          <h2>{t('brand.contactTitle')}</h2>
-          <p className="brand-contact-hint">{t('brand.contactHint')}</p>
-          <div className="brand-contact-qrs">
-            <div className="brand-contact-qr">
-              <div className="footer-qr" aria-label={t('brand.wechat.a')}>
-                SYW
-              </div>
-              <p>{t('brand.wechat.a')}</p>
-            </div>
-            <div className="brand-contact-qr">
-              <div className="footer-qr" aria-label={t('brand.wechat.b')}>
-                SYW
-              </div>
-              <p>{t('brand.wechat.b')}</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </>
   )
 }
