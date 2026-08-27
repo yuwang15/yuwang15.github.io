@@ -54,7 +54,7 @@ export function StoreDetail() {
 
         <div className="detail-footer">
           <p>{t('stores.footer')}</p>
-          <Link className="btn" to="/#contact">
+          <Link className="btn" to="/contact">
             {t('brand.contactLabel')}
           </Link>
         </div>
