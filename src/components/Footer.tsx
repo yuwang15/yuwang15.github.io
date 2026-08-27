@@ -4,6 +4,25 @@ import { useLocale } from '../i18n/LocaleContext'
 
 const year = new Date().getFullYear()
 
+const qrItems = [
+  {
+    key: 'brand',
+    labelKey: 'brand.wechat.a',
+    src: '/assets/qr/wechat-brand.jpg',
+  },
+  {
+    key: 'booking',
+    labelKey: 'brand.wechat.b',
+    src: '/assets/qr/wechat-booking.jpg',
+  },
+  {
+    key: 'douyin',
+    labelKey: 'footer.douyin',
+    src: '/assets/qr/douyin.jpg',
+    handleKey: 'footer.douyinId',
+  },
+] as const
+
 export function Footer() {
   const { t } = useLocale()
 
@@ -30,28 +49,21 @@ export function Footer() {
         <div className="footer-col" id="contact">
           <p className="footer-col-title">{t('footer.follow')}</p>
           <div className="footer-social">
-            <div className="footer-social-block">
-              <p>{t('brand.wechat.a')}</p>
-              <div className="footer-qr" aria-label={t('brand.wechat.a')}>
-                SYW
+            {qrItems.map((item) => (
+              <div key={item.key} className="footer-social-block">
+                <p className="footer-social-label">{t(item.labelKey)}</p>
+                <div className="footer-qr">
+                  <img src={item.src} alt={t(item.labelKey)} loading="lazy" />
+                </div>
+                {'handleKey' in item ? (
+                  <p className="footer-social-handle">{t(item.handleKey)}</p>
+                ) : (
+                  <p className="footer-social-handle footer-social-handle--spacer" aria-hidden>
+                    &nbsp;
+                  </p>
+                )}
               </div>
-            </div>
-            <div className="footer-social-block">
-              <p>{t('brand.wechat.b')}</p>
-              <div className="footer-qr" aria-label={t('brand.wechat.b')}>
-                SYW
-              </div>
-            </div>
-            <div className="footer-social-block">
-              <p>{t('footer.douyin')}</p>
-              <div
-                className="footer-qr"
-                aria-label={`${t('footer.douyin')} ${t('footer.douyinId')}`}
-              >
-                SYW
-              </div>
-              <p className="footer-social-handle">{t('footer.douyinId')}</p>
-            </div>
+            ))}
           </div>
         </div>
       </div>
