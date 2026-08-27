@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import { BrandMark } from '../components/BrandMark'
 import { HeroMedia } from '../components/HeroMedia'
 import { featuredCollection } from '../data/collections'
-import { getHomePicks } from '../data/picks'
+import { getHomeGalleryShots } from '../data/picks'
 import { useLocale } from '../i18n/LocaleContext'
 
 function Shot({
@@ -48,15 +48,18 @@ export function Home() {
     [1, 1, 0.65, 0.25],
   )
 
-  const picks = getHomePicks(featuredCollection)
-  const pinLeft = picks[0]
-  const pinRight = picks.slice(1, 3)
-  const rowA = picks.slice(3, 7)
-  const pinLeft2 = picks[7]
-  const pinRight2 = picks.slice(8, 10)
-  const rowB = picks.slice(10, 14)
+  const shots = getHomeGalleryShots()
+  const pinLeft = shots[0]
+  const pinRight = shots.slice(1, 3)
+  const rest = shots.slice(3)
+  // Enough for a second pin round (1+2); otherwise one mixed row
+  const useSecondPin = rest.length >= 7
+  const rowA = useSecondPin ? rest.slice(0, 4) : rest
+  const pinLeft2 = useSecondPin ? rest[4] : undefined
+  const pinRight2 = useSecondPin ? rest.slice(5, 7) : []
+  const rowB = useSecondPin ? rest.slice(7) : []
 
-  const detail = `/collections/${featuredCollection.slug}`
+  const featuredPath = `/collections/${featuredCollection.slug}`
 
   return (
     <>
@@ -72,7 +75,7 @@ export function Home() {
             </h1>
             <p className="hero-line">{t('home.tagline')}</p>
             <div className="hero-actions">
-              <Link className="btn btn-light" to={detail}>
+              <Link className="btn btn-light" to={featuredPath}>
                 {featuredCollection.title}
               </Link>
             </div>
@@ -86,23 +89,36 @@ export function Home() {
             <div className="home-pin-left">
               {pinLeft ? (
                 <div className="home-pin-sticky">
-                  <Link to={detail} className="home-shot is-pin">
-                    <img src={pinLeft} alt="" loading="eager" />
+                  <Link
+                    to={`/collections/${pinLeft.slug}`}
+                    className="home-shot is-pin"
+                  >
+                    <img src={pinLeft.src} alt="" loading="eager" />
                   </Link>
                 </div>
               ) : null}
             </div>
             <div className="home-pin-right">
-              {pinRight.map((src) => (
-                <Shot key={src} to={detail} src={src} className="is-stack" />
+              {pinRight.map((shot) => (
+                <Shot
+                  key={shot.src}
+                  to={`/collections/${shot.slug}`}
+                  src={shot.src}
+                  className="is-stack"
+                />
               ))}
             </div>
           </div>
 
           {rowA.length > 0 ? (
             <div className="home-shot-row">
-              {rowA.map((src) => (
-                <Shot key={src} to={detail} src={src} className="is-row" />
+              {rowA.map((shot) => (
+                <Shot
+                  key={shot.src}
+                  to={`/collections/${shot.slug}`}
+                  src={shot.src}
+                  className="is-row"
+                />
               ))}
             </div>
           ) : null}
@@ -111,14 +127,22 @@ export function Home() {
             <div className="home-pin-round">
               <div className="home-pin-left">
                 <div className="home-pin-sticky">
-                  <Link to={detail} className="home-shot is-pin">
-                    <img src={pinLeft2} alt="" loading="lazy" />
+                  <Link
+                    to={`/collections/${pinLeft2.slug}`}
+                    className="home-shot is-pin"
+                  >
+                    <img src={pinLeft2.src} alt="" loading="lazy" />
                   </Link>
                 </div>
               </div>
               <div className="home-pin-right">
-                {pinRight2.map((src) => (
-                  <Shot key={src} to={detail} src={src} className="is-stack" />
+                {pinRight2.map((shot) => (
+                  <Shot
+                    key={shot.src}
+                    to={`/collections/${shot.slug}`}
+                    src={shot.src}
+                    className="is-stack"
+                  />
                 ))}
               </div>
             </div>
@@ -126,8 +150,13 @@ export function Home() {
 
           {rowB.length > 0 ? (
             <div className="home-shot-row">
-              {rowB.map((src) => (
-                <Shot key={src} to={detail} src={src} className="is-row" />
+              {rowB.map((shot) => (
+                <Shot
+                  key={shot.src}
+                  to={`/collections/${shot.slug}`}
+                  src={shot.src}
+                  className="is-row"
+                />
               ))}
             </div>
           ) : null}

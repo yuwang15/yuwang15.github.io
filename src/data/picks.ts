@@ -1,4 +1,4 @@
-import type { Collection } from './collections'
+import { collections, type Collection } from './collections'
 
 /** Public-facing curated frames — never dump the full archive */
 const PICKS: Record<string, number[]> = {
@@ -9,10 +9,17 @@ const PICKS: Record<string, number[]> = {
   resort26: [1, 6, 11, 16, 21, 26, 31, 36, 41],
 }
 
-/** Home: pin rounds + full rows — need enough frames */
-const HOME_PICKS: Record<string, number[]> = {
-  aw26: [4, 12, 22, 36, 8, 18, 28, 48, 2, 14, 24, 40, 56, 72],
-  ss26: [4, 11, 19, 27, 7, 15, 23, 33, 0, 8, 12, 18, 22, 30],
+/** Home gallery: a few frames per collection (not one season only) */
+const HOME_MIX: Record<string, number[]> = {
+  aw26: [4, 28],
+  ss26: [4, 19],
+  aw25: [12, 62],
+  resort26: [6, 21],
+}
+
+export type HomeShot = {
+  src: string
+  slug: string
 }
 
 export function getCollectionPicks(collection: Collection): string[] {
@@ -22,9 +29,22 @@ export function getCollectionPicks(collection: Collection): string[] {
     .filter((src): src is string => Boolean(src))
 }
 
-export function getHomePicks(collection: Collection): string[] {
-  const indices = HOME_PICKS[collection.slug] ?? PICKS[collection.slug]?.slice(0, 6) ?? []
-  return indices
-    .map((i) => collection.images[i])
-    .filter((src): src is string => Boolean(src))
+/** Round-robin across seasons — ~2 frames each */
+export function getHomeGalleryShots(): HomeShot[] {
+  const pools = collections.map((collection) => {
+    const indices = HOME_MIX[collection.slug] ?? [0, 8]
+    return indices
+      .map((i) => collection.images[i])
+      .filter((src): src is string => Boolean(src))
+      .map((src) => ({ src, slug: collection.slug }))
+  })
+
+  const shots: HomeShot[] = []
+  const depth = Math.max(0, ...pools.map((p) => p.length))
+  for (let i = 0; i < depth; i += 1) {
+    for (const pool of pools) {
+      if (pool[i]) shots.push(pool[i])
+    }
+  }
+  return shots
 }
