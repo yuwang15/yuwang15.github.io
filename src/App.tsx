@@ -8,6 +8,7 @@ import { Collections } from './pages/Collections'
 import { Contact } from './pages/Contact'
 import { Films } from './pages/Films'
 import { Home } from './pages/Home'
+import { Services } from './pages/Services'
 import { StoreDetail } from './pages/StoreDetail'
 import { Stores } from './pages/Stores'
 
@@ -25,6 +26,7 @@ export default function App() {
             <Route path="/films" element={<Films />} />
             <Route path="/stores" element={<Stores />} />
             <Route path="/stores/:slug" element={<StoreDetail />} />
+            <Route path="/services" element={<Services />} />
             <Route path="/brand" element={<Brand />} />
             <Route path="/contact" element={<Contact />} />
             <Route path="/campaign" element={<Navigate to="/films" replace />} />
@@ -32,6 +34,10 @@ export default function App() {
             <Route path="/about" element={<Navigate to="/brand" replace />} />
             <Route path="/story" element={<Navigate to="/brand" replace />} />
             <Route path="/wechat" element={<Navigate to="/contact" replace />} />
+            <Route
+              path="/online-and-in-store-services"
+              element={<Navigate to="/services" replace />}
+            />
             <Route path="*" element={<Navigate to="/" replace />} />
           </Routes>
         </main>

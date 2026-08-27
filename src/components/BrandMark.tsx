@@ -1,9 +1,9 @@
 type BrandMarkProps = {
   className?: string
-  size?: 'hero' | 'nav' | 'footer' | 'display'
+  size?: 'hero' | 'nav' | 'footer' | 'display' | 'mega'
 }
 
-/** SYW wordmark — tight tracking, trailing space cancelled */
+/** SYW wordmark — site chrome always spells the full brand */
 export function BrandMark({ className = '', size = 'display' }: BrandMarkProps) {
   return (
     <span

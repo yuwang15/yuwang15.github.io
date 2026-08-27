@@ -1,43 +1,79 @@
+import { useEffect, useRef, useState } from 'react'
 import { BrandMark } from '../components/BrandMark'
-import { stores } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
 
-/** Store atmosphere + garment detail — not lookbook fashion plates */
-const brandVisuals = {
-  hero: stores[0].images[2] ?? stores[0].cover,
-  storeWide: stores[2].images[4] ?? stores[2].cover,
-  detailA: stores[1].images[3] ?? stores[1].cover,
-  detailB: '/assets/collections/ss26/029.jpg',
-  detailC: '/assets/collections/aw25/018.jpg',
-}
+/** Brand philosophy visuals — lookbook / film only, never store interiors */
+const brandStills = [
+  '/assets/collections/aw26/008.jpg',
+  '/assets/collections/ss26/021.jpg',
+  '/assets/collections/spring26/058.jpg',
+]
+
+/** Brand tone studies — garment close-ups, one per SYW letter, season-agnostic */
+const toneStudies = [
+  { src: '/assets/mood/brand-tone-style.jpg', letter: 'S', name: 'brand.pillar.style' },
+  { src: '/assets/mood/brand-tone-youth.jpg', letter: 'Y', name: 'brand.pillar.youth' },
+  { src: '/assets/mood/brand-tone-wild.jpg', letter: 'W', name: 'brand.pillar.wild' },
+]
 
 export function Brand() {
   const { t } = useLocale()
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const [ready, setReady] = useState(false)
+
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el) return
+    const tryPlay = () => {
+      el.muted = true
+      const p = el.play()
+      if (p) p.catch(() => {})
+    }
+    const onReady = () => {
+      setReady(true)
+      tryPlay()
+    }
+    el.addEventListener('loadeddata', onReady)
+    tryPlay()
+    return () => el.removeEventListener('loadeddata', onReady)
+  }, [])
 
   return (
-    <>
-      <section className="about-hero" id="about">
-        <img src={`${brandVisuals.hero}?v=store`} alt={t('brand.altHero')} />
-        <div className="about-hero-veil" />
-        <div className="about-hero-copy">
-          <p className="eyebrow" style={{ color: 'rgba(255,255,255,0.8)' }}>
-            {t('brand.eyebrow')}
-          </p>
-          <h1>
+    <div className="page brand-page">
+      <section className="about-intro" aria-labelledby="about-heading">
+        <div className="about-intro-media">
+          <img
+            src="/assets/brand/syw-poster.jpg"
+            alt=""
+            className={ready ? 'is-dim' : undefined}
+          />
+          <video
+            ref={videoRef}
+            className={ready ? 'is-ready' : undefined}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster="/assets/brand/syw-poster.jpg"
+          >
+            <source src="/assets/brand/syw.mp4" type="video/mp4" />
+          </video>
+        </div>
+
+        <div className="about-intro-copy">
+          <p className="eyebrow">{t('brand.eyebrow')}</p>
+          <h1 id="about-heading">
             <BrandMark size="display" />
           </h1>
+          <div className="about-intro-lede">
+            <p>{t('brand.p1')}</p>
+            <p>{t('brand.p2')}</p>
+            <p>{t('brand.p3')}</p>
+            <p>{t('brand.p4')}</p>
+          </div>
         </div>
       </section>
-
-      <div className="about-body">
-        <p className="eyebrow" style={{ marginBottom: '1rem' }}>
-          {t('brand.about')}
-        </p>
-        <p>{t('brand.p1')}</p>
-        <p>{t('brand.p2')}</p>
-        <p>{t('brand.p3')}</p>
-        <p>{t('brand.p4')}</p>
-      </div>
 
       <section className="brand-pillars">
         <div className="container brand-pillars-grid">
@@ -71,34 +107,37 @@ export function Brand() {
         </div>
       </section>
 
-      <section className="brand-visuals">
-        <div className="brand-visuals-grid">
-          <figure className="brand-visual is-store">
-            <img
-              src={`${brandVisuals.detailA}?v=store`}
-              alt={t('brand.altStore')}
-            />
-          </figure>
-          <figure className="brand-visual is-detail">
-            <img
-              src={`${brandVisuals.detailB}?v=detail`}
-              alt={t('brand.altDetail')}
-            />
-          </figure>
-          <figure className="brand-visual is-detail-b">
-            <img
-              src={`${brandVisuals.detailC}?v=detail`}
-              alt={t('brand.altDetail')}
-            />
-          </figure>
-          <figure className="brand-visual is-wide">
-            <img
-              src={`${brandVisuals.storeWide}?v=store`}
-              alt={t('brand.altStore')}
-            />
-          </figure>
+      <section className="brand-mood" aria-labelledby="brand-mood-heading">
+        <div className="container brand-mood-head">
+          <p className="eyebrow">{t('brand.mood.eyebrow')}</p>
+          <h2 id="brand-mood-heading">{t('brand.mood.title')}</h2>
+          <p className="brand-mood-lede">{t('brand.mood.lede')}</p>
+        </div>
+
+        <div className="container brand-mood-grid">
+          {toneStudies.map(({ src, letter, name }) => (
+            <figure key={src} className="brand-mood-item">
+              <img src={src} alt={t(name)} loading="lazy" />
+              <figcaption>
+                <span className="brand-mood-letter" aria-hidden>
+                  {letter}
+                </span>
+                <span className="brand-mood-name">{t(name)}</span>
+              </figcaption>
+            </figure>
+          ))}
         </div>
       </section>
-    </>
+
+      <section className="brand-visuals" aria-label={t('brand.about')}>
+        <div className="brand-visuals-grid brand-visuals-grid--lookbook">
+          {brandStills.map((src) => (
+            <figure key={src} className="brand-visual is-look">
+              <img src={src} alt={t('brand.altDetail')} loading="lazy" />
+            </figure>
+          ))}
+        </div>
+      </section>
+    </div>
   )
 }

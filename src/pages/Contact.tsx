@@ -76,6 +76,7 @@ export function Contact() {
     <section className="contact-split">
       <div className="contact-media" aria-hidden="true">
         <video
+          key={film.src}
           className="contact-video"
           autoPlay
           muted

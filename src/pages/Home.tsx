@@ -1,10 +1,16 @@
-import { motion, useScroll, useTransform } from 'framer-motion'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { BrandMark } from '../components/BrandMark'
+import {
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useReducedMotion,
+  useTransform,
+} from 'framer-motion'
 import { HeroMedia } from '../components/HeroMedia'
-import { featuredCollection } from '../data/collections'
-import { getHomeGalleryShots } from '../data/picks'
+import { brandFilms } from '../data/campaigns'
+import { getHomeSections } from '../data/picks'
+import { useHomeSceneSnap } from '../hooks/useHomeSceneSnap'
 import { useLocale } from '../i18n/LocaleContext'
 
 function Shot({
@@ -27,139 +33,225 @@ function Shot({
   )
 }
 
-export function Home() {
+/** Still intro — original hero frame + season line */
+function HomeHeroIntro() {
+  const heroRef = useRef<HTMLElement>(null)
+  const reduceMotion = useReducedMotion()
   const { t } = useLocale()
-  const filmRef = useRef<HTMLElement>(null)
+  const progress = useMotionValue(0)
 
-  const { scrollYProgress: filmProgress } = useScroll({
-    target: filmRef,
-    offset: ['start start', 'end end'],
-  })
+  useEffect(() => {
+    let ticking = false
 
-  // Scroll pan only — no zoom
-  const focusY = useTransform(
-    filmProgress,
-    [0, 1],
-    ['center 22%', 'center 58%'],
+    const update = () => {
+      const el = heroRef.current
+      if (!el) {
+        ticking = false
+        return
+      }
+      const start = el.offsetTop
+      const end = start + el.offsetHeight - window.innerHeight
+      const next =
+        reduceMotion || end <= start
+          ? 1
+          : Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)))
+      progress.set(next)
+      ticking = false
+    }
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true
+        requestAnimationFrame(update)
+      }
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', update)
+    }
+  }, [progress, reduceMotion])
+
+  const copyOpacity = useTransform(
+    progress,
+    [0, 0.35, 0.55],
+    reduceMotion ? [1, 1, 1] : [1, 0.4, 0],
   )
-  const overlayOpacity = useTransform(
-    filmProgress,
-    [0, 0.25, 0.85, 1],
-    [1, 1, 0.65, 0.25],
-  )
-
-  const shots = getHomeGalleryShots()
-  const pinLeft = shots[0]
-  const pinRight = shots.slice(1, 3)
-  const rest = shots.slice(3)
-  // Enough for a second pin round (1+2); otherwise one mixed row
-  const useSecondPin = rest.length >= 7
-  const rowA = useSecondPin ? rest.slice(0, 4) : rest
-  const pinLeft2 = useSecondPin ? rest[4] : undefined
-  const pinRight2 = useSecondPin ? rest.slice(5, 7) : []
-  const rowB = useSecondPin ? rest.slice(7) : []
-
-  const featuredPath = `/collections/${featuredCollection.slug}`
+  const copyY = useTransform(progress, [0, 0.55], reduceMotion ? [0, 0] : [0, 28])
 
   return (
-    <>
-      <section className="hero hero--scrollfilm" ref={filmRef}>
-        <div className="hero-sticky">
-          <div className="hero-film-stage">
-            <HeroMedia focusY={focusY} />
-          </div>
+    <section ref={heroRef} className="hero hero--intro">
+      <div className="hero-sticky">
+        <div className="hero-film-stage">
+          <HeroMedia />
+        </div>
 
-          <motion.div className="hero-overlay" style={{ opacity: overlayOpacity }}>
-            <h1 className="hero-brand">
-              <BrandMark size="hero" />
-            </h1>
-            <p className="hero-line">{t('home.tagline')}</p>
-            <div className="hero-actions">
-              <Link className="btn btn-light" to={featuredPath}>
-                {featuredCollection.title}
-              </Link>
+        <div className="hero-overlay hero-overlay--intro">
+          <motion.div
+            className="hero-intro-copy"
+            style={{ opacity: copyOpacity, y: copyY }}
+          >
+            <p className="hero-intro-season">{t('home.hero.season')}</p>
+            <div className="hero-intro-scroll-block">
+              <p className="hero-intro-scroll">{t('home.hero.scroll')}</p>
+              <span className="hero-intro-scroll-line" aria-hidden />
             </div>
           </motion.div>
         </div>
+      </div>
+    </section>
+  )
+}
+
+/**
+ * Latest film under the still: sticky stage; scroll opens inset → full canvas.
+ */
+function HomeVideoCanvas() {
+  const trackRef = useRef<HTMLElement>(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const reduceMotion = useReducedMotion()
+  const film = brandFilms[0]
+  const progress = useMotionValue(0)
+
+  useEffect(() => {
+    let ticking = false
+
+    const update = () => {
+      const el = trackRef.current
+      if (!el) {
+        ticking = false
+        return
+      }
+      const start = el.offsetTop
+      const end = start + el.offsetHeight - window.innerHeight
+      const next =
+        reduceMotion || end <= start
+          ? 1
+          : Math.min(1, Math.max(0, (window.scrollY - start) / (end - start)))
+      progress.set(next)
+      ticking = false
+    }
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true
+        requestAnimationFrame(update)
+      }
+    }
+
+    update()
+    window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('resize', update)
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('resize', update)
+    }
+  }, [progress, reduceMotion])
+
+  const insetY = useTransform(progress, [0, 0.5], reduceMotion ? [0, 0] : [14, 0])
+  const insetX = useTransform(progress, [0, 0.5], reduceMotion ? [0, 0] : [18, 0])
+  const clipPath = useMotionTemplate`inset(${insetY}% ${insetX}% ${insetY}% ${insetX}%)`
+  const videoScale = useTransform(
+    progress,
+    [0, 0.5, 1],
+    reduceMotion ? [1, 1, 1] : [1.14, 1, 1],
+  )
+
+  useEffect(() => {
+    const el = videoRef.current
+    if (!el || reduceMotion) return
+
+    const tryPlay = () => {
+      el.muted = true
+      el.defaultMuted = true
+      const p = el.play()
+      if (p) p.catch(() => {})
+    }
+
+    el.addEventListener('loadeddata', tryPlay)
+    tryPlay()
+    return () => el.removeEventListener('loadeddata', tryPlay)
+  }, [reduceMotion, film.src])
+
+  if (reduceMotion) {
+    return (
+      <section className="home-film-band" aria-label={film.title.zh}>
+        <div className="home-film-curtain">
+          <div className="home-film-frame home-film-frame--static">
+            <img src={film.poster} alt="" />
+          </div>
+        </div>
       </section>
+    )
+  }
+
+  return (
+    <section
+      ref={trackRef}
+      className="hero hero--video-canvas"
+      aria-label={film.title.zh}
+    >
+      <div className="hero-sticky">
+        <motion.div className="hero-canvas-frame" style={{ clipPath }}>
+          <motion.video
+            key={film.src}
+            ref={videoRef}
+            style={{ scale: videoScale }}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            poster={film.poster}
+          >
+            <source src={film.src} type="video/mp4" />
+          </motion.video>
+        </motion.div>
+      </div>
+    </section>
+  )
+}
+
+export function Home() {
+  const { t } = useLocale()
+  const reduceMotion = useReducedMotion()
+  const sections = getHomeSections()
+  useHomeSceneSnap(!reduceMotion)
+
+  return (
+    <>
+      <HomeHeroIntro />
+      <HomeVideoCanvas />
 
       <section className="home-lookbook home-lookbook--editorial">
         <div className="home-gallery-shell">
-          <div className="home-pin-round">
-            <div className="home-pin-left">
-              {pinLeft ? (
-                <div className="home-pin-sticky">
-                  <Link
-                    to={`/collections/${pinLeft.slug}`}
-                    className="home-shot is-pin"
-                  >
-                    <img src={pinLeft.src} alt="" loading="eager" />
-                  </Link>
-                </div>
-              ) : null}
-            </div>
-            <div className="home-pin-right">
-              {pinRight.map((shot) => (
-                <Shot
-                  key={shot.src}
-                  to={`/collections/${shot.slug}`}
-                  src={shot.src}
-                  className="is-stack"
-                />
-              ))}
-            </div>
-          </div>
-
-          {rowA.length > 0 ? (
-            <div className="home-shot-row">
-              {rowA.map((shot) => (
-                <Shot
-                  key={shot.src}
-                  to={`/collections/${shot.slug}`}
-                  src={shot.src}
-                  className="is-row"
-                />
-              ))}
-            </div>
-          ) : null}
-
-          {pinLeft2 ? (
-            <div className="home-pin-round">
-              <div className="home-pin-left">
-                <div className="home-pin-sticky">
-                  <Link
-                    to={`/collections/${pinLeft2.slug}`}
-                    className="home-shot is-pin"
-                  >
-                    <img src={pinLeft2.src} alt="" loading="lazy" />
-                  </Link>
-                </div>
+          {sections.map((section) =>
+            section.type === 'banner' ? (
+              <div className="home-look-banner" key={section.shot.src}>
+                <Link
+                  to={`/collections/${section.shot.slug}`}
+                  className="home-look-banner-link"
+                >
+                  <img src={section.shot.src} alt="" loading="eager" />
+                </Link>
               </div>
-              <div className="home-pin-right">
-                {pinRight2.map((shot) => (
+            ) : (
+              <div className="home-pair" key={section.shots[0].src}>
+                {section.shots.map((shot, index) => (
                   <Shot
                     key={shot.src}
                     to={`/collections/${shot.slug}`}
                     src={shot.src}
-                    className="is-stack"
+                    className="is-pair"
+                    loading={index === 0 ? 'eager' : 'lazy'}
                   />
                 ))}
               </div>
-            </div>
-          ) : null}
-
-          {rowB.length > 0 ? (
-            <div className="home-shot-row">
-              {rowB.map((shot) => (
-                <Shot
-                  key={shot.src}
-                  to={`/collections/${shot.slug}`}
-                  src={shot.src}
-                  className="is-row"
-                />
-              ))}
-            </div>
-          ) : null}
+            ),
+          )}
 
           <div className="home-cta">
             <Link className="btn" to="/collections">

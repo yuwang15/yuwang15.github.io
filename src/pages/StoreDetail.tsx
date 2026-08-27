@@ -1,18 +1,7 @@
 import { Link, Navigate, useParams } from 'react-router-dom'
+import { OrientFigure } from '../components/OrientMedia'
 import { getStore } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
-
-const ROLES = [
-  'is-hero',
-  'is-side',
-  'is-side',
-  'is-third',
-  'is-third',
-  'is-third',
-  'is-half',
-  'is-half',
-  'is-wide',
-] as const
 
 export function StoreDetail() {
   const { slug } = useParams()
@@ -39,24 +28,24 @@ export function StoreDetail() {
 
         <div className="edit-mosaic" aria-label={L(store.title)}>
           {picks.map((src, index) => (
-            <figure
+            <OrientFigure
               key={src}
-              className={`edit-mosaic-item ${ROLES[index] ?? 'is-third'}`}
-            >
-              <img
-                src={src}
-                alt=""
-                loading={index < 3 ? 'eager' : 'lazy'}
-              />
-            </figure>
+              src={src}
+              loading={index < 3 ? 'eager' : 'lazy'}
+            />
           ))}
         </div>
 
         <div className="detail-footer">
           <p>{t('stores.footer')}</p>
-          <Link className="btn" to="/contact">
-            {t('brand.contactLabel')}
-          </Link>
+          <a
+            className="btn"
+            href={store.mapUrl}
+            target="_blank"
+            rel="noreferrer"
+          >
+            {t('stores.book')}
+          </a>
         </div>
       </div>
     </div>
