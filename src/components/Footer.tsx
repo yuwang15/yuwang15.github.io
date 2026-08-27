@@ -26,7 +26,7 @@ export function Footer() {
         </div>
 
         <div className="footer-col" id="contact">
-          <p className="footer-col-title">{t('footer.wechat')}</p>
+          <p className="footer-col-title">{t('footer.follow')}</p>
           <div className="footer-social">
             <div className="footer-social-block">
               <p>{t('brand.wechat.a')}</p>
@@ -40,11 +40,17 @@ export function Footer() {
                 SYW
               </div>
             </div>
+            <div className="footer-social-block">
+              <p>{t('footer.douyin')}</p>
+              <div
+                className="footer-qr"
+                aria-label={`${t('footer.douyin')} ${t('footer.douyinId')}`}
+              >
+                SYW
+              </div>
+              <p className="footer-social-handle">{t('footer.douyinId')}</p>
+            </div>
           </div>
-          <p className="footer-douyin">
-            <span>{t('footer.douyin')}</span>
-            <span className="footer-douyin-id">{t('footer.douyinId')}</span>
-          </p>
         </div>
       </div>
 
