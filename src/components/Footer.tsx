@@ -16,10 +16,9 @@ const qrItems = [
     src: '/assets/qr/wechat-booking.jpg',
   },
   {
-    key: 'douyin',
-    labelKey: 'footer.douyin',
+    key: 'service',
+    labelKey: 'brand.wechat.c',
     src: '/assets/qr/douyin.jpg',
-    handleKey: 'footer.douyinId',
   },
 ] as const
 
@@ -46,24 +45,23 @@ export function Footer() {
           </nav>
         </div>
 
-        <div className="footer-col" id="contact">
+        <div className="footer-col footer-col--follow" id="contact">
           <p className="footer-col-title">{t('footer.follow')}</p>
-          <div className="footer-social">
-            {qrItems.map((item) => (
-              <div key={item.key} className="footer-social-block">
-                <p className="footer-social-label">{t(item.labelKey)}</p>
-                <div className="footer-qr">
-                  <img src={item.src} alt={t(item.labelKey)} loading="lazy" />
+          <div className="footer-follow-stack">
+            <div className="footer-social">
+              {qrItems.map((item) => (
+                <div key={item.key} className="footer-social-block">
+                  <p className="footer-social-label">{t(item.labelKey)}</p>
+                  <div className="footer-qr">
+                    <img src={item.src} alt={t(item.labelKey)} loading="lazy" />
+                  </div>
                 </div>
-                {'handleKey' in item ? (
-                  <p className="footer-social-handle">{t(item.handleKey)}</p>
-                ) : (
-                  <p className="footer-social-handle footer-social-handle--spacer" aria-hidden>
-                    &nbsp;
-                  </p>
-                )}
-              </div>
-            ))}
+              ))}
+            </div>
+            <p className="footer-douyin-line">
+              <span>{t('footer.douyin')}</span>
+              <span className="footer-douyin-id">{t('footer.douyinId')}</span>
+            </p>
           </div>
         </div>
       </div>
