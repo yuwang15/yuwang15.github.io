@@ -25,10 +25,23 @@ export function Nav() {
     }
   }, [open])
 
+  const goHomeTop = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    setOpen(false)
+    if (pathname === '/') {
+      event.preventDefault()
+      window.scrollTo(0, 0)
+    }
+  }
+
   return (
     <header className={`nav${open ? ' is-open' : ''}`}>
       <div className="nav-inner">
-        <Link to="/" className="nav-brand" aria-label={t('nav.home')}>
+        <Link
+          to="/"
+          className="nav-brand"
+          aria-label={t('nav.home')}
+          onClick={goHomeTop}
+        >
           <BrandMark size="nav" />
         </Link>
 

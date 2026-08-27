@@ -253,6 +253,9 @@ p {
   flex: 0 0 auto;
   color: #111;
   text-decoration: none;
+  cursor: pointer;
+  position: relative;
+  z-index: 2;
 }
 
 .nav-brand:hover {
