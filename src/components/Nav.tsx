@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, type MouseEvent } from 'react'
 import { Link, NavLink, useLocation } from 'react-router-dom'
 import { BrandMark } from './BrandMark'
 import { useLocale } from '../i18n/LocaleContext'
@@ -27,7 +27,7 @@ export function Nav() {
     }
   }, [open])
 
-  const goHomeTop = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  const goHomeTop = (event: MouseEvent<HTMLAnchorElement>) => {
     setOpen(false)
     if (pathname === '/') {
       event.preventDefault()
