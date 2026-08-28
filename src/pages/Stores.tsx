@@ -1,14 +1,9 @@
 import { motion, useReducedMotion } from 'framer-motion'
-import { Link } from 'react-router-dom'
-import { stores } from '../data/stores'
+import { stores, type Store } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
 
 const ease = [0.22, 1, 0.36, 1] as const
 
-/**
- * Listing thumbnails are ~370px wide but the sources are 2800-3000px originals,
- * so point at the WebP derivatives built by scripts/build-store-listing-images.py.
- */
 const listingSrc = (src: string, kind: 'hero' | 'thumb') => {
   const slash = src.lastIndexOf('/')
   const dir = src.slice(0, slash)
@@ -20,8 +15,11 @@ export function Stores() {
   const { t, L } = useLocale()
   const reduceMotion = useReducedMotion()
 
-  // Thresholds stay low so anything peeking above the fold fades in on load,
-  // rather than staying blank until the first scroll.
+  const withPhotos = stores.filter((store): store is Store & { images: [string, string, string] } =>
+    Boolean(store.images),
+  )
+  const textOnly = stores.filter((store) => !store.images)
+
   const fadeIn = (delay: number) => ({
     initial: reduceMotion ? false : { opacity: 0, y: 18 },
     whileInView: { opacity: 1, y: 0 },
@@ -38,11 +36,10 @@ export function Stores() {
       </div>
 
       <div className="store-atmosphere">
-        {stores.map((store, index) => {
+        {withPhotos.map((store, index) => {
           const flipped = index % 2 === 1
-          // The first store sits above the fold; lazy-loading it there only
-          // delays the request and makes the last thumb trail behind.
           const aboveFold = index === 0
+          const [hero, thumbA, thumbB] = store.images
 
           return (
             <motion.article
@@ -56,50 +53,49 @@ export function Stores() {
               <div
                 className={`store-atmosphere-block${flipped ? ' is-flip' : ''}`}
               >
-                <Link
-                  to={`/stores/${store.slug}`}
-                  className="store-atmosphere-media"
-                >
+                <div className="store-atmosphere-media">
                   <motion.figure
                     className="store-atmosphere-hero"
                     {...fadeIn(0)}
                   >
                     <img
-                      src={listingSrc(store.cover, 'hero')}
+                      src={listingSrc(hero, 'hero')}
                       alt={L(store.title)}
                       loading={aboveFold ? 'eager' : 'lazy'}
                       fetchPriority={aboveFold ? 'high' : 'auto'}
                       decoding="async"
+                      onError={(event) => {
+                        event.currentTarget.src = hero
+                      }}
                     />
                   </motion.figure>
                   <div className="store-atmosphere-thumbs">
-                    {store.images.slice(1, 3).map((src, thumbIndex) => (
-                      <motion.figure
-                        key={src}
-                        {...fadeIn(0.06 + thumbIndex * 0.05)}
-                      >
+                    {[thumbA, thumbB].map((src, thumbIndex) => (
+                      <motion.figure key={src} {...fadeIn(0.06 + thumbIndex * 0.05)}>
                         <img
                           src={listingSrc(src, 'thumb')}
                           alt=""
                           loading={aboveFold ? 'eager' : 'lazy'}
                           fetchPriority={aboveFold ? 'high' : 'auto'}
                           decoding="async"
+                          onError={(event) => {
+                            event.currentTarget.src = src
+                          }}
                         />
                       </motion.figure>
                     ))}
                   </div>
-                </Link>
+                </div>
                 <div className="store-atmosphere-copy">
-                  <h2>
-                    <Link to={`/stores/${store.slug}`}>{L(store.title)}</Link>
-                  </h2>
+                  <h2>{L(store.title)}</h2>
+                  <p>{L(store.address)}</p>
                   <a
                     className="btn-text"
                     href={store.mapUrl}
                     target="_blank"
                     rel="noreferrer"
                   >
-                    {t('stores.book')}
+                    {t('stores.map')}
                   </a>
                 </div>
               </div>
@@ -107,6 +103,30 @@ export function Stores() {
           )
         })}
       </div>
+
+      {textOnly.length > 0 ? (
+        <div className="container store-directory">
+          <hr className="store-directory-rule" aria-hidden="true" />
+          <ul className="store-directory-list">
+            {textOnly.map((store) => (
+              <li key={store.slug} className="store-directory-row">
+                <div className="store-directory-main">
+                  <h2>{L(store.title)}</h2>
+                  <p>{L(store.address)}</p>
+                </div>
+                <a
+                  className="btn-text"
+                  href={store.mapUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  {t('stores.map')}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
     </div>
   )
 }

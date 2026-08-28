@@ -1,17 +1,3 @@
-/** Abstract material study — texture only, no garments */
-export type MoodStudy = {
-  src: string
-  caption: { zh: string; en: string }
-  /** 宽高比，沿用图墙的分宽逻辑，所以氛围图和 lookbook 同一套排版 */
-  ratio: number
-}
-
-/** 一组氛围图，插在图墙第 at 个图块之前 */
-export type MoodInsert = {
-  at: number
-  studies: MoodStudy[]
-}
-
 export type Collection = {
   slug: string
   title: string
@@ -21,7 +7,6 @@ export type Collection = {
   cover: string
   images: string[]
   featured?: boolean
-  mood?: MoodInsert[]
 }
 
 export const collections: Collection[] = [
@@ -36,33 +21,6 @@ export const collections: Collection[] = [
     },
     cover: '/assets/collections/aw26/cover.jpg',
     featured: true,
-    mood: [
-      {
-        at: 0,
-        studies: [
-          {
-            src: '/assets/mood/aw26-concrete-light.jpg',
-            caption: { zh: '混凝土上的光', en: 'Light on concrete' },
-            ratio: 2.4,
-          },
-        ],
-      },
-      {
-        at: 5,
-        studies: [
-          {
-            src: '/assets/mood/aw26-moss-stone.jpg',
-            caption: { zh: '苔与石', en: 'Moss and stone' },
-            ratio: 1.35,
-          },
-          {
-            src: '/assets/mood/aw26-mohair-backlit.jpg',
-            caption: { zh: '纤维逆光', en: 'Fibre, backlit' },
-            ratio: 0.85,
-          },
-        ],
-      },
-    ],
     images: [
       '/assets/collections/aw26/001.jpg',
       '/assets/collections/aw26/002.jpg',

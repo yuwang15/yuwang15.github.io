@@ -3,8 +3,8 @@ import { Link } from 'react-router-dom'
 import { ResponsiveImage } from '../components/ResponsiveImage'
 import { useLocale } from '../i18n/LocaleContext'
 
-const faqKeys = ['walkin', 'wechat', 'exchange'] as const
-const boutiqueOfferKeys = ['tryon', 'styling', 'care'] as const
+const faqKeys = ['walkin', 'contact', 'exchange', 'collaborate'] as const
+const offerKeys = ['custom', 'wash', 'tryon', 'exchange'] as const
 
 export function Services() {
   const { t } = useLocale()
@@ -12,24 +12,23 @@ export function Services() {
 
   return (
     <div className="page services-page">
-      <header className="services-hero">
-        <div className="services-hero-media">
-          <ResponsiveImage
-            src="/assets/services/services-visit.jpg"
-            alt=""
-            loading="eager"
-            fetchPriority="high"
-            sizes="hero"
-          />
-        </div>
-        <div className="services-hero-copy container">
-          <p className="eyebrow">{t('services.eyebrow')}</p>
-          <h1>{t('services.title')}</h1>
-          <p className="services-lede">{t('services.lede')}</p>
-        </div>
-      </header>
+      <div className="services-hero-media">
+        <ResponsiveImage
+          src="/assets/services/services-visit.jpg"
+          alt=""
+          loading="eager"
+          fetchPriority="high"
+          sizes="hero"
+        />
+      </div>
 
       <div className="container">
+        <header className="editorial-header">
+          <p className="eyebrow">{t('services.eyebrow')}</p>
+          <h1>{t('services.title')}</h1>
+          <p className="lede">{t('services.lede')}</p>
+        </header>
+
         <section className="services-paths" aria-label={t('services.paths.label')}>
           <article className="services-path">
             <div className="services-path-media">
@@ -43,9 +42,9 @@ export function Services() {
             <div className="services-path-copy">
               <h2>{t('services.online.title')}</h2>
               <p>{t('services.online.body')}</p>
-              <Link to="/contact" className="btn-text">
+              <a href="#contact" className="btn-text">
                 {t('services.online.cta')}
-              </Link>
+              </a>
             </div>
           </article>
 
@@ -61,7 +60,6 @@ export function Services() {
             <div className="services-path-copy">
               <h2>{t('services.boutique.title')}</h2>
               <p>{t('services.boutique.body')}</p>
-              <p className="services-path-note">{t('services.boutique.note')}</p>
             </div>
           </article>
         </section>
@@ -69,10 +67,9 @@ export function Services() {
         <section className="services-offers" aria-labelledby="services-offers">
           <div className="services-offers-intro">
             <h2 id="services-offers">{t('services.offers.title')}</h2>
-            <p>{t('services.offers.lede')}</p>
           </div>
           <ul className="services-offers-list">
-            {boutiqueOfferKeys.map((key) => (
+            {offerKeys.map((key) => (
               <li key={key}>
                 <h3>{t(`services.offers.${key}.title`)}</h3>
                 <p>{t(`services.offers.${key}.body`)}</p>
@@ -97,9 +94,9 @@ export function Services() {
               <Link to="/stores" className="btn">
                 {t('services.visit.stores')}
               </Link>
-              <Link to="/contact" className="btn-text">
-                {t('services.visit.optional')}
-              </Link>
+              <a href="#contact" className="btn-text">
+                {t('services.visit.wechat')}
+              </a>
             </div>
           </div>
         </section>

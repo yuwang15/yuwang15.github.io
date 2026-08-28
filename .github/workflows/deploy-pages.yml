@@ -23,11 +23,23 @@ jobs:
         with:
           node-version: 22
           cache: npm
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
       - name: Trim unused heavy assets
         run: |
           rm -rf public/assets/_orient
           rm -f public/assets/hero-portrait.mp4 public/assets/hero-landscape.mp4
+      # The WebP derivatives are gitignored, so the build must recreate them or
+      # every srcset in the bundle points at a file that was never published.
+      - name: Cache responsive derivatives
+        uses: actions/cache@v4
+        with:
+          path: public/assets/.rsp
+          key: rsp-${{ hashFiles('public/assets/**/*.jpg', 'public/assets/**/*.png', 'scripts/build-responsive-images.py') }}
+      - run: pip install pillow
       - run: npm ci
+      - run: npm run images:responsive
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:

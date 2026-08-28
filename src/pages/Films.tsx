@@ -42,7 +42,7 @@ export function Films() {
                 controls
                 playsInline
                 preload="metadata"
-                poster={film.poster}
+                poster={film.cover}
                 width={film.width}
                 height={film.height}
               >

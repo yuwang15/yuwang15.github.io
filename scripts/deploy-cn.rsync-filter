@@ -1,0 +1,29 @@
+# Prune rules for the mainland China (OSS + CDN) upload.
+# Mirrors .vercelignore so both lines serve an identical file set.
+#
+# First matching rule wins, so keeps (+) must precede the drops (-).
+# Note rsync's `**` spans slashes while `**/` demands at least one directory,
+# so `dir/**.jpg` is what matches masters sitting directly inside dir/.
+
+# Pre-cropped store images are real assets, not masters.
++ /assets/stores/**/derived/**
+
+# Masters are replaced at runtime by /assets/.rsp WebP (q=90).
+# QR codes are deliberately absent here: the derivative build skips qr/,
+# so those files have no WebP tier to fall back to.
+- /assets/collections/**.jpg
+- /assets/collections/**.JPG
+- /assets/collections/**.jpeg
+- /assets/stores/**.jpg
+- /assets/stores/**.JPG
+- /assets/services/**.jpg
+- /assets/mood/**.jpg
+- /assets/hero*.jpg
+- /assets/brand-*.jpg
+- /assets/video-still.jpg
+- /assets/video-poster.jpg
+
+# Working files and unused hero video cuts.
+- /assets/_orient/
+- /assets/hero-portrait.mp4
+- /assets/hero-landscape.mp4

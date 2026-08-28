@@ -3,14 +3,11 @@ import type { LocalizedString } from '../i18n/types'
 export type Store = {
   slug: string
   title: LocalizedString
-  summary: LocalizedString
-  /** Street / mall line shown on Contact */
   address: LocalizedString
-  /** Opens native / web maps */
+  /** Opens maps search */
   mapUrl: string
-  cover: string
-  images: string[]
-  visitNote?: LocalizedString
+  /** Listing: [hero, thumb, thumb] — only when real store photos exist */
+  images?: [string, string, string]
 }
 
 const mapsSearch = (query: string) =>
@@ -25,91 +22,111 @@ export const stores: Store[] = [
       en: 'Hengtian New World, 19 Ninghai Middle Rd, Haian, Nantong',
     },
     mapUrl: mapsSearch('海安恒天新世界 SYW'),
-    summary: {
-      zh: '动线开阔，灯光柔和。衣裳是焦点，空间只负责安静地托住它们，让人愿意多停一会儿。',
-      en: 'Open flow, soft light. Clothes are the focus; the room simply holds them—so you want to stay a little longer.',
-    },
-    cover: '/assets/stores/haian-hengtian/3.jpg',
-    // Listing: night facade + lounge doorway + wood island — not the travertine twin of 如皋
     images: [
       '/assets/stores/haian-hengtian/3.jpg',
       '/assets/stores/haian-hengtian/9.jpg',
       '/assets/stores/haian-hengtian/7.jpg',
-      '/assets/stores/haian-hengtian/8.jpg',
-      '/assets/stores/haian-hengtian/4.jpg',
-      '/assets/stores/haian-hengtian/11.jpg',
-      '/assets/stores/haian-hengtian/1.jpg',
-      '/assets/stores/haian-hengtian/2.jpg',
-      '/assets/stores/haian-hengtian/10.jpg',
-      '/assets/stores/haian-hengtian/12.jpg',
-      '/assets/stores/haian-hengtian/14.jpg',
-      '/assets/stores/haian-hengtian/5.jpg',
-      '/assets/stores/haian-hengtian/6.jpg',
-      '/assets/stores/haian-hengtian/13.jpg',
     ],
-    visitNote: {
-      zh: '到店预约，请通过微信与我们联系。',
-      en: 'To visit, reach us on WeChat.',
+  },
+  {
+    slug: 'haian-central',
+    title: { zh: '海安中央广场', en: 'Haian Central Plaza' },
+    address: {
+      zh: '江苏省南通市海安市 · 中央广场一楼',
+      en: 'Central Plaza, 1F, Haian, Nantong',
     },
+    mapUrl: mapsSearch('海安中央广场 SYW'),
   },
   {
     slug: 'xiruncheng',
-    title: { zh: '喜润城', en: 'Xiruncheng' },
+    title: { zh: '海安喜润城', en: 'Haian Xiruncheng' },
     address: {
-      zh: '江苏省南通市如东县城中街道珠江路7号 · 喜润城',
-      en: 'Xiruncheng, 7 Zhujiang Rd, Rudong, Nantong',
+      zh: '江苏省南通市海安市中坝中路41号 · 喜润城',
+      en: 'Xiruncheng, 41 Zhongba Middle Rd, Haian, Nantong',
     },
-    mapUrl: mapsSearch('如东喜润城 SYW'),
-    summary: {
-      zh: '中性色墙面托住剪裁。每一件衣裳旁边都留一点空，好让你看清楚，也慢慢试。',
-      en: 'Neutral walls hold the cut. Each piece keeps a little air beside it—so you can see clearly, and try without hurry.',
-    },
-    cover: '/assets/stores/xiruncheng/7.jpg',
-    // Listing: hall panorama + terrazzo view + storefront
+    mapUrl: mapsSearch('海安喜润城 SYW'),
     images: [
       '/assets/stores/xiruncheng/7.jpg',
-      '/assets/stores/xiruncheng/2.jpg',
       '/assets/stores/xiruncheng/1.jpg',
-      '/assets/stores/xiruncheng/3.jpg',
-      '/assets/stores/xiruncheng/4.jpg',
-      '/assets/stores/xiruncheng/5.jpg',
-      '/assets/stores/xiruncheng/6.jpg',
+      '/assets/stores/xiruncheng/2.jpg',
     ],
-    visitNote: {
-      zh: '到店预约，请通过微信与我们联系。',
-      en: 'To visit, reach us on WeChat.',
-    },
   },
   {
     slug: 'rugao-wuyue',
     title: { zh: '如皋吾悦', en: 'Rugao Wuyue' },
     address: {
-      zh: '江苏省南通市如皋市海阳南路与惠政路交汇处 · 吾悦广场',
-      en: 'Wuyue Plaza, intersection of Haiyang S. Rd & Huizheng Rd, Rugao, Nantong',
+      zh: '江苏省南通市如皋市海阳南路与惠政路交汇处 · 吾悦广场一楼',
+      en: 'Wuyue Plaza 1F, Haiyang S. Rd & Huizheng Rd, Rugao, Nantong',
     },
     mapUrl: mapsSearch('如皋吾悦广场 SYW'),
-    summary: {
-      zh: '门头沉静，橱窗柔亮。走进去，衣裳沿墙慢慢排开，光线落在面料上，不急着说话。',
-      en: 'A quiet facade, a soft-lit window. Inside, clothes line the walls slowly—light lands on cloth before anyone speaks.',
-    },
-    cover: '/assets/stores/rugao-wuyue/4.jpg',
-    // Listing: rock-wall signature + herringbone + exterior — distinct from 海安
     images: [
+      '/assets/stores/rugao-wuyue/4.jpg',
       '/assets/stores/rugao-wuyue/7.jpg',
       '/assets/stores/rugao-wuyue/10.jpg',
-      '/assets/stores/rugao-wuyue/1.jpg',
-      '/assets/stores/rugao-wuyue/6.jpg',
-      '/assets/stores/rugao-wuyue/3.jpg',
-      '/assets/stores/rugao-wuyue/4.jpg',
-      '/assets/stores/rugao-wuyue/5.jpg',
-      '/assets/stores/rugao-wuyue/8.jpg',
-      '/assets/stores/rugao-wuyue/9.jpg',
-      '/assets/stores/rugao-wuyue/2.jpg',
     ],
-    visitNote: {
-      zh: '到店预约，请通过微信与我们联系。',
-      en: 'To visit, reach us on WeChat.',
+  },
+  {
+    slug: 'rugao-wenfeng',
+    title: { zh: '如皋文峰', en: 'Rugao Wenfeng' },
+    address: {
+      zh: '江苏省南通市如皋市 · 文峰',
+      en: 'Wenfeng, Rugao, Nantong',
     },
+    mapUrl: mapsSearch('如皋文峰 SYW'),
+  },
+  {
+    slug: 'rugao-anding',
+    title: { zh: '如皋安定街', en: 'Rugao Anding Street' },
+    address: {
+      zh: '江苏省南通市如皋市安定街105号（二楼）',
+      en: '105 Anding St, 2F, Rugao, Nantong',
+    },
+    mapUrl: mapsSearch('如皋安定街105号 SYW'),
+  },
+  {
+    slug: 'baoying-wuyue',
+    title: { zh: '宝应吾悦广场', en: 'Baoying Wuyue Plaza' },
+    address: {
+      zh: '江苏省扬州市宝应县 · 吾悦广场一楼 1063 号',
+      en: 'Wuyue Plaza 1F No.1063, Baoying, Yangzhou',
+    },
+    mapUrl: mapsSearch('宝应吾悦广场 SYW'),
+  },
+  {
+    slug: 'danyang-wuyue',
+    title: { zh: '丹阳吾悦广场', en: 'Danyang Wuyue Plaza' },
+    address: {
+      zh: '江苏省镇江市丹阳市 · 吾悦广场一楼 020 号',
+      en: 'Wuyue Plaza 1F No.020, Danyang, Zhenjiang',
+    },
+    mapUrl: mapsSearch('丹阳吾悦广场 SYW'),
+  },
+  {
+    slug: 'gaoyou-shimao',
+    title: { zh: '高邮世贸金街', en: 'Gaoyou Shimao Golden Street' },
+    address: {
+      zh: '江苏省扬州市高邮市 · 世贸金街一楼 1-042 号',
+      en: 'Shimao Golden Street 1F No.1-042, Gaoyou, Yangzhou',
+    },
+    mapUrl: mapsSearch('高邮世贸金街 SYW'),
+  },
+  {
+    slug: 'qidong-wuyue',
+    title: { zh: '启东吾悦广场', en: 'Qidong Wuyue Plaza' },
+    address: {
+      zh: '江苏省南通市启东市 · 吾悦广场一楼 1038 号',
+      en: 'Wuyue Plaza 1F No.1038, Qidong, Nantong',
+    },
+    mapUrl: mapsSearch('启东吾悦广场 SYW'),
+  },
+  {
+    slug: 'xinghua-wuyue',
+    title: { zh: '兴化吾悦广场', en: 'Xinghua Wuyue Plaza' },
+    address: {
+      zh: '江苏省泰州市兴化市 · 吾悦广场一楼 1052 号',
+      en: 'Wuyue Plaza 1F No.1052, Xinghua, Taizhou',
+    },
+    mapUrl: mapsSearch('兴化吾悦广场 SYW'),
   },
 ]
 

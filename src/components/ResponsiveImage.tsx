@@ -15,11 +15,13 @@ type Props = {
   decoding?: 'async' | 'auto' | 'sync'
   sizes?: ResponsiveSizes | string
   onLoad?: React.ReactEventHandler<HTMLImageElement>
+  /** Marks image as waiting to fade in */
+  pending?: boolean
 }
 
 /**
  * When responsive WebP derivatives exist (manifest + /.rsp), serves srcset.
- * Always keeps the original URL as <img src> fallback for reliability.
+ * Always keeps a fallback src for reliability.
  */
 export function ResponsiveImage({
   src,
@@ -30,41 +32,47 @@ export function ResponsiveImage({
   decoding = 'async',
   sizes = 'full',
   onLoad,
+  pending = false,
 }: Props) {
   const master = assetPath(src)
   const srcSet = webpSrcSet(src)
   const sizesAttr = sizesFor(sizes)
-  // Prefer largest WebP when present; never lose the master as last resort.
   const fallback = largestWebp(src) ?? src
 
-  if (!srcSet) {
-    return (
-      <img
-        src={src}
-        alt={alt}
-        className={className}
-        loading={loading}
-        fetchPriority={fetchPriority}
-        decoding={decoding}
-        onLoad={onLoad}
-      />
-    )
+  const handleLoad: React.ReactEventHandler<HTMLImageElement> = (event) => {
+    event.currentTarget.classList.add('is-loaded')
+    event.currentTarget.removeAttribute('data-pending')
+    onLoad?.(event)
   }
+
+  const img = (
+    <img
+      src={srcSet ? fallback : src}
+      alt={alt}
+      className={className}
+      loading={loading}
+      fetchPriority={fetchPriority}
+      decoding={decoding}
+      sizes={srcSet ? sizesAttr : undefined}
+      onLoad={handleLoad}
+      data-pending={pending ? '' : undefined}
+      data-master={srcSet ? master : undefined}
+      ref={(node) => {
+        // Cached images may already be complete before onLoad fires.
+        if (node?.complete && node.naturalWidth > 0) {
+          node.classList.add('is-loaded')
+          node.removeAttribute('data-pending')
+        }
+      }}
+    />
+  )
+
+  if (!srcSet) return img
 
   return (
     <picture>
       <source type="image/webp" srcSet={srcSet} sizes={sizesAttr} />
-      <img
-        src={fallback}
-        alt={alt}
-        className={className}
-        loading={loading}
-        fetchPriority={fetchPriority}
-        decoding={decoding}
-        sizes={sizesAttr}
-        onLoad={onLoad}
-        data-master={master}
-      />
+      {img}
     </picture>
   )
 }

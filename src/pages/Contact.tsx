@@ -1,7 +1,6 @@
 import { useState, type ChangeEvent, type FormEvent } from 'react'
 import { Link } from 'react-router-dom'
 import { brandFilms } from '../data/campaigns'
-import { stores } from '../data/stores'
 import { useLocale } from '../i18n/LocaleContext'
 
 type FormState = {
@@ -27,7 +26,7 @@ const phoneOk = (value: string) => {
 }
 
 export function Contact() {
-  const { t, L } = useLocale()
+  const { t } = useLocale()
   const film = brandFilms[0]
   const [form, setForm] = useState<FormState>(empty)
   const [error, setError] = useState('')
@@ -171,24 +170,6 @@ export function Contact() {
               <button className="btn contact-submit" type="submit">
                 {t('contact.send')}
               </button>
-
-              <div className="contact-addresses">
-                <p className="contact-addresses-label">{t('contact.addresses')}</p>
-                <ul>
-                  {stores.map((store) => (
-                    <li key={store.slug}>
-                      <a
-                        href={store.mapUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        <strong>{L(store.title)}</strong>
-                        <span>{L(store.address)}</span>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </form>
           )}
         </div>

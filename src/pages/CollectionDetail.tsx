@@ -1,7 +1,7 @@
-import { Fragment, type CSSProperties } from 'react'
+import { useEffect, useState, type CSSProperties } from 'react'
 import { Link, Navigate, useParams } from 'react-router-dom'
 import { ResponsiveImage } from '../components/ResponsiveImage'
-import { getCollection, type MoodInsert } from '../data/collections'
+import { getCollection } from '../data/collections'
 import {
   getEditorialShots,
   planEditorialBlocks,
@@ -9,6 +9,11 @@ import {
 } from '../data/layout'
 import { getCollectionPicks } from '../data/picks'
 import { useLocale } from '../i18n/LocaleContext'
+
+/** First paint: a few groups only, then reveal the rest in quiet waves. */
+const INITIAL_BLOCKS = 4
+const WAVE_SIZE = 3
+const WAVE_MS = 450
 
 function Frame({
   shot,
@@ -29,34 +34,11 @@ function Frame({
         src={shot.src}
         alt=""
         loading={eager ? 'eager' : 'lazy'}
+        fetchPriority={eager ? 'high' : 'auto'}
         sizes="half"
+        pending
       />
     </figure>
-  )
-}
-
-/** 氛围图借用图墙的行排版，所以它读起来是这一季的一部分，而不是外挂的一块 */
-function MoodRow({ insert, eager }: { insert: MoodInsert; eager: boolean }) {
-  const { L } = useLocale()
-  const span = insert.studies.reduce((acc, s) => acc + s.ratio, 0)
-
-  return (
-    <div className="edit-run-row is-mood" style={{ '--row-span': span } as CSSProperties}>
-      {insert.studies.map((study) => (
-        <figure
-          key={study.src}
-          className="edit-run-frame"
-          style={{ flexGrow: study.ratio, '--frame-ratio': study.ratio } as CSSProperties}
-        >
-          <ResponsiveImage
-            src={study.src}
-            alt={L(study.caption)}
-            loading={eager ? 'eager' : 'lazy'}
-            sizes="half"
-          />
-        </figure>
-      ))}
-    </div>
   )
 }
 
@@ -70,7 +52,26 @@ export function CollectionDetail() {
   }
 
   const picks = getCollectionPicks(collection)
-  const blocks = planEditorialBlocks(getEditorialShots(collection, picks))
+  const layoutScale = collection.slug === 'aw25' ? 'large' : 'default'
+  const blocks = planEditorialBlocks(
+    getEditorialShots(collection, picks),
+    layoutScale,
+  )
+  // First few groups paint immediately; later groups trickle in without a click.
+  const [visibleCount, setVisibleCount] = useState(INITIAL_BLOCKS)
+  const shown = blocks.slice(0, visibleCount)
+
+  useEffect(() => {
+    setVisibleCount(INITIAL_BLOCKS)
+  }, [collection.slug])
+
+  useEffect(() => {
+    if (visibleCount >= blocks.length) return
+    const id = window.setTimeout(() => {
+      setVisibleCount((n) => Math.min(blocks.length, n + WAVE_SIZE))
+    }, WAVE_MS)
+    return () => window.clearTimeout(id)
+  }, [visibleCount, blocks.length])
 
   return (
     <div className="page">
@@ -90,50 +91,42 @@ export function CollectionDetail() {
         <p className="lede detail-lede">{L(collection.summary)}</p>
 
         <div className="edit-run" aria-label={collection.title}>
-          {blocks.map((block, blockIndex) => {
+          {shown.map((block, blockIndex) => {
             const eager = blockIndex === 0
-            const insert = collection.mood?.find((m) => m.at === blockIndex)
-            const body =
-              block.kind === 'feature' ? (
-                <div
-                  className={`edit-run-row is-feature${block.flip ? ' is-flip' : ''}`}
-                  style={{ '--row-span': block.span } as CSSProperties}
-                >
-                  <Frame shot={block.hero} grow={block.heroGrow} eager={eager} />
-                  <div className="edit-run-stack">
-                    {block.stack.map((shot) => (
-                      <Frame
-                        key={shot.src}
-                        shot={shot}
-                        grow={1 / shot.ratio}
-                        eager={eager}
-                      />
-                    ))}
-                  </div>
-                </div>
-              ) : (
-                <div
-                  className={`edit-run-row${block.tight ? ' is-tight' : ''}`}
-                  style={{ '--row-span': block.span } as CSSProperties}
-                >
-                  {block.shots.map((shot) => (
+
+            return block.kind === 'feature' ? (
+              <div
+                key={block.hero.src}
+                className={`edit-run-row is-feature${block.flip ? ' is-flip' : ''}`}
+                style={{ '--row-span': block.span } as CSSProperties}
+              >
+                <Frame shot={block.hero} grow={block.heroGrow} eager={eager} />
+                <div className="edit-run-stack">
+                  {block.stack.map((shot, stackIndex) => (
                     <Frame
                       key={shot.src}
                       shot={shot}
-                      grow={shot.ratio}
-                      eager={eager}
+                      grow={1 / shot.ratio}
+                      eager={eager && stackIndex === 0}
                     />
                   ))}
                 </div>
-              )
-
-            return (
-              <Fragment
-                key={block.kind === 'feature' ? block.hero.src : block.shots[0].src}
+              </div>
+            ) : (
+              <div
+                key={block.shots[0].src}
+                className={`edit-run-row${block.tight ? ' is-tight' : ''}`}
+                style={{ '--row-span': block.span } as CSSProperties}
               >
-                {insert && <MoodRow insert={insert} eager={eager} />}
-                {body}
-              </Fragment>
+                {block.shots.map((shot, shotIndex) => (
+                  <Frame
+                    key={shot.src}
+                    shot={shot}
+                    grow={shot.ratio}
+                    eager={eager && shotIndex === 0}
+                  />
+                ))}
+              </div>
             )
           })}
         </div>

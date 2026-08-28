@@ -9,7 +9,10 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "images:stores": "python3 scripts/build-store-listing-images.py",
-    "images:responsive": "python3 scripts/build-responsive-images.py"
+    "images:responsive": "python3 scripts/build-responsive-images.py",
+    "deploy:cn": "bash scripts/deploy-cn.sh",
+    "deploy:global": "npm run images:responsive && vercel --prod",
+    "deploy": "npm run deploy:global && npm run deploy:cn"
   },
   "dependencies": {
     "framer-motion": "^13.0.0",

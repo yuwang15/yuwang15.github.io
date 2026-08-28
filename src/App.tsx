@@ -9,7 +9,6 @@ import { Contact } from './pages/Contact'
 import { Films } from './pages/Films'
 import { Home } from './pages/Home'
 import { Services } from './pages/Services'
-import { StoreDetail } from './pages/StoreDetail'
 import { Stores } from './pages/Stores'
 
 export default function App() {
@@ -25,7 +24,7 @@ export default function App() {
             <Route path="/collections/:slug" element={<CollectionDetail />} />
             <Route path="/films" element={<Films />} />
             <Route path="/stores" element={<Stores />} />
-            <Route path="/stores/:slug" element={<StoreDetail />} />
+            <Route path="/stores/:slug" element={<Navigate to="/stores" replace />} />
             <Route path="/services" element={<Services />} />
             <Route path="/brand" element={<Brand />} />
             <Route path="/contact" element={<Contact />} />

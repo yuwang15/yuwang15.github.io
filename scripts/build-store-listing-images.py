@@ -1,11 +1,8 @@
 #!/usr/bin/env python3
 """Generate right-sized WebP derivatives for the store listing page.
 
-The listing shows one hero (~858x528 CSS) and two thumbs (~373x263 CSS) per
-store, but the source photos are 2800-3000px wide and 1-3 MB each. Serving the
-originals there costs ~12 MB and makes the last thumb visibly trail behind.
-
-Reads src/data/stores.ts so the set stays in sync when covers change.
+The listing shows one hero and two thumbs per store.
+Reads src/data/stores.ts so the set stays in sync when images change.
 Run: npm run images:stores
 """
 
@@ -21,26 +18,22 @@ ROOT = Path(__file__).resolve().parent.parent
 DATA = ROOT / "src" / "data" / "stores.ts"
 PUBLIC = ROOT / "public"
 
-# Widest CSS box x2 for retina, with headroom for object-fit: cover cropping.
 HERO_W = 1800
 THUMB_W = 1000
 QUALITY = 80
 
 
 def parse_listing_images() -> list[tuple[str, int]]:
-    """Return [(public_path, target_width)] for every image the listing renders."""
     src = DATA.read_text(encoding="utf-8")
     picks: list[tuple[str, int]] = []
 
-    for block in src.split("slug:")[1:]:
-        cover = re.search(r"cover:\s*'([^']+)'", block)
-        images_block = re.search(r"images:\s*\[(.*?)\]", block, re.S)
-        if not cover or not images_block:
+    for block in re.findall(r"images:\s*\[(.*?)\]", src, re.S):
+        urls = re.findall(r"'([^']+)'", block)
+        if len(urls) < 3:
             continue
-        picks.append((cover.group(1), HERO_W))
-        urls = re.findall(r"'([^']+)'", images_block.group(1))
-        for url in urls[1:3]:
-            picks.append((url, THUMB_W))
+        picks.append((urls[0], HERO_W))
+        picks.append((urls[1], THUMB_W))
+        picks.append((urls[2], THUMB_W))
 
     return picks
 
@@ -70,16 +63,18 @@ def main() -> int:
 
         im = ImageOps.exif_transpose(Image.open(src_path)).convert("RGB")
         if im.width > width:
-            im = im.resize((width, round(im.height * width / im.width)), Image.LANCZOS)
+            im = im.resize(
+                (width, round(im.height * width / im.width)), Image.LANCZOS
+            )
         im.save(out, "WEBP", quality=QUALITY, method=6)
 
         src_kb = src_path.stat().st_size / 1024
         out_kb = out.stat().st_size / 1024
         before += src_kb
         after += out_kb
-        print(f"{public_url:45s} {src_kb:8.0f} KB -> {out_kb:6.0f} KB  {out.name}")
+        print(f"{public_url:50s} {src_kb:8.0f} KB -> {out_kb:6.0f} KB  {out.name}")
 
-    print(f"\ntotal {before / 1024:.1f} MB -> {after / 1024:.2f} MB")
+    print(f"\n{len(picks)} images  {before:.0f} KB -> {after:.0f} KB")
     return 0
 
 

@@ -35,6 +35,11 @@ export type EditorialBlock = EditorialRowBlock | EditorialFeatureBlock
 const LANDSCAPE = 1.15
 const CYCLE = ['feature', 'strip', 'pair', 'feature', 'strip', 'pair', 'strip', 'pair'] as const
 const SIZE = { feature: 3, strip: 4, pair: 2 } as const
+/** Quiet Form：少排四连，大片更大 */
+const CYCLE_LARGE = ['feature', 'pair', 'pair', 'feature', 'pair', 'pair'] as const
+const SIZE_LARGE = { feature: 3, strip: 3, pair: 2 } as const
+
+export type EditorialScale = 'default' | 'large'
 
 function sum(shots: EditorialShot[]) {
   return shots.reduce((acc, s) => acc + s.ratio, 0)
@@ -71,7 +76,13 @@ function feature(
  * 三种块的高度差到 2.5 倍以上，这个尺度落差是"不像 gallery"的来源；
  * 每块都严格铺满整宽，所以不会出现栏位空洞。
  */
-function planPortraitRun(shots: EditorialShot[], flipSeed: number): EditorialBlock[] {
+function planPortraitRun(
+  shots: EditorialShot[],
+  flipSeed: number,
+  scale: EditorialScale,
+): EditorialBlock[] {
+  const cycle = scale === 'large' ? CYCLE_LARGE : CYCLE
+  const sizeMap = scale === 'large' ? SIZE_LARGE : SIZE
   const blocks: EditorialBlock[] = []
   let cursor = 0
   let beat = 0
@@ -79,9 +90,9 @@ function planPortraitRun(shots: EditorialShot[], flipSeed: number): EditorialBlo
 
   while (cursor < shots.length) {
     const left = shots.length - cursor
-    let kind: (typeof CYCLE)[number] = CYCLE[beat % CYCLE.length]
+    let kind: (typeof CYCLE)[number] = cycle[beat % cycle.length]
     beat += 1
-    let size: number = SIZE[kind]
+    let size: number = sizeMap[kind]
 
     if (size > left) {
       size = left
@@ -107,20 +118,22 @@ function planPortraitRun(shots: EditorialShot[], flipSeed: number): EditorialBlo
   return blocks
 }
 
-export function planEditorialBlocks(shots: EditorialShot[]): EditorialBlock[] {
+export function planEditorialBlocks(
+  shots: EditorialShot[],
+  scale: EditorialScale = 'default',
+): EditorialBlock[] {
   const blocks: EditorialBlock[] = []
   let cursor = 0
   let features = 0
 
   while (cursor < shots.length) {
     if (shots[cursor].ratio >= LANDSCAPE) {
-      // 横图不进竖图节奏：单张撑满一行做视觉停顿，连着两张就并排
+      // 横图各自通栏一行，不要两张并排挤小
       let end = cursor
       while (end < shots.length && shots[end].ratio >= LANDSCAPE) end += 1
       const wides = shots.slice(cursor, end)
-      for (let i = 0; i < wides.length; i += 2) {
-        const pair = wides.slice(i, i + 2)
-        blocks.push(row(pair, false))
+      for (const shot of wides) {
+        blocks.push(row([shot], false))
       }
       cursor = end
       continue
@@ -142,7 +155,7 @@ export function planEditorialBlocks(shots: EditorialShot[]): EditorialBlock[] {
       }
     }
 
-    const planned = planPortraitRun(run, features)
+    const planned = planPortraitRun(run, features, scale)
     features += planned.filter((b) => b.kind === 'feature').length
     blocks.push(...planned)
     cursor = end

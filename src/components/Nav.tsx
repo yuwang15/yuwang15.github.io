@@ -58,6 +58,15 @@ export function Nav() {
   }, [open])
 
   useEffect(() => {
+    if (!open) return
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    window.addEventListener('keydown', onKey)
+    return () => window.removeEventListener('keydown', onKey)
+  }, [open])
+
+  useEffect(() => {
     let ticking = false
 
     const update = () => {
@@ -109,6 +118,14 @@ export function Nav() {
       {/* Wider top hit area so hover can summon the bar like Miu Miu */}
       {atHomeTop ? <div className="nav-hover-zone" aria-hidden /> : null}
 
+      <button
+        className="nav-scrim"
+        type="button"
+        tabIndex={-1}
+        aria-hidden
+        onClick={() => setOpen(false)}
+      />
+
       <div className="nav-inner">
         <motion.div
           className="nav-brand-slot"
@@ -136,28 +153,37 @@ export function Nav() {
         </motion.div>
 
         <nav className="nav-menu" aria-label={locale === 'zh' ? '主导航' : 'Main'}>
-          <ul className="nav-links">
-            {links.map((link, index) => (
-              <motion.li
-                key={link.to}
-                initial={reduceMotion ? false : { opacity: 0, y: -8 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.5,
-                  ease,
-                  delay: reduceMotion ? 0 : 0.1 + index * 0.06,
-                }}
-              >
-                <NavLink
-                  to={link.to}
-                  className={({ isActive }) => (isActive ? 'active' : undefined)}
-                  onClick={() => setOpen(false)}
+          {/* Layered panels sweep in one after another to build the drawer */}
+          <div className="nav-menu-bg" aria-hidden>
+            <span />
+            <span />
+            <span />
+          </div>
+
+          <div className="nav-menu-inner">
+            <ul className="nav-links">
+              {links.map((link, index) => (
+                <motion.li
+                  key={link.to}
+                  initial={reduceMotion ? false : { opacity: 0, y: -8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    ease,
+                    delay: reduceMotion ? 0 : 0.1 + index * 0.06,
+                  }}
                 >
-                  {link.label}
-                </NavLink>
-              </motion.li>
-            ))}
-          </ul>
+                  <NavLink
+                    to={link.to}
+                    className={({ isActive }) => (isActive ? 'active' : undefined)}
+                    onClick={() => setOpen(false)}
+                  >
+                    <span className="nav-link-text">{link.label}</span>
+                  </NavLink>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
         </nav>
 
         <motion.div
