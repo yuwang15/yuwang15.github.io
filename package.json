@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && python3 scripts/prerender-seo.py",
+    "images:og": "python3 scripts/build-og-images.py",
     "lint": "oxlint",
     "preview": "vite preview",
     "images:stores": "python3 scripts/build-store-listing-images.py",

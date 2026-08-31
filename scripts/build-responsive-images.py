@@ -25,7 +25,7 @@ MANIFEST = ROOT / "src" / "data" / "responsive.manifest.json"
 
 WIDTHS = (720, 1080, 1440, 1920, 2560)
 WEBP_QUALITY = 90
-SKIP_DIR_NAMES = {"derived", ".rsp", "_orient", "qr"}
+SKIP_DIR_NAMES = {"derived", ".rsp", "_orient", "qr", "share"}
 
 
 def should_skip(path: Path) -> bool:

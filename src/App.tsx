@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { DocumentMeta } from './components/DocumentMeta'
 import { Footer } from './components/Footer'
 import { Nav } from './components/Nav'
 import { ScrollToTop } from './components/ScrollToTop'
@@ -15,6 +16,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
+      <DocumentMeta />
       <div className="site">
         <Nav />
         <main className="site-main">
