@@ -239,9 +239,7 @@ p {
 }
 
 .nav.is-over-hero .nav-brand,
-.nav.is-over-hero .nav-links > li > a,
-.nav.is-over-hero .lang-switch button,
-.nav.is-over-hero .lang-switch-sep {
+.nav.is-over-hero .nav-links > li > a {
   color: #fff;
 }
 
@@ -432,9 +430,7 @@ p {
 }
 
 .nav.is-home-top.is-over-hero .nav-brand,
-.nav.is-home-top.is-over-hero .nav-links > li > a,
-.nav.is-home-top.is-over-hero .lang-switch button,
-.nav.is-home-top.is-over-hero .lang-switch-sep {
+.nav.is-home-top.is-over-hero .nav-links > li > a {
   color: #fff;
 }
 
@@ -474,9 +470,7 @@ p {
 }
 
 .nav.is-home-top.is-reveal.is-frost .nav-brand,
-.nav.is-home-top.is-reveal.is-frost .nav-links > li > a,
-.nav.is-home-top.is-reveal.is-frost .lang-switch button,
-.nav.is-home-top.is-reveal.is-frost .lang-switch-sep {
+.nav.is-home-top.is-reveal.is-frost .nav-links > li > a {
   color: #111;
 }
 
@@ -516,47 +510,6 @@ p {
   align-items: center;
   gap: 0.85rem;
   flex: 0 0 auto;
-}
-
-.lang-switch {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.lang-switch-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.2rem;
-}
-
-.lang-switch-sep {
-  opacity: 0.35;
-  font-size: 0.7rem;
-  line-height: 1;
-}
-
-.lang-switch button {
-  appearance: none;
-  border: 0;
-  background: transparent;
-  padding: 0.35rem 0.15rem;
-  font-family: var(--font-body);
-  font-size: 0.72rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  color: #111;
-  opacity: 0.4;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-
-.lang-switch button:hover {
-  opacity: 0.75;
-}
-
-.lang-switch button.is-active {
-  opacity: 1;
 }
 
 .nav-links {

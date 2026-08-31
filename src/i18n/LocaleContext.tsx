@@ -1,60 +1,30 @@
-import {
-  createContext,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-  type ReactNode,
-} from 'react'
+import { createContext, useContext, useMemo, type ReactNode } from 'react'
 import { translate } from './messages'
-import { STORAGE_KEY, type Locale, type LocalizedString, pick } from './types'
+import { type Locale, type LocalizedString, pick } from './types'
 
 type LocaleContextValue = {
   locale: Locale
-  setLocale: (locale: Locale) => void
   t: (key: string, vars?: Record<string, string | number>) => string
   L: (value: LocalizedString | string) => string
 }
 
 const LocaleContext = createContext<LocaleContextValue | null>(null)
 
-function readStoredLocale(): Locale {
-  try {
-    const stored = localStorage.getItem(STORAGE_KEY)
-    if (stored === 'zh' || stored === 'en') return stored
-  } catch {
-    /* ignore */
-  }
-  return 'zh'
-}
+/**
+ * The site presents one bilingual voice rather than two switchable locales, so
+ * copy is authored in the `zh` set with English kept inline where it reads as
+ * part of the brand. The `en` set is retained for a future standalone build.
+ */
+const LOCALE: Locale = 'zh'
 
 export function LocaleProvider({ children }: { children: ReactNode }) {
-  const [locale, setLocaleState] = useState<Locale>(() =>
-    typeof window === 'undefined' ? 'zh' : readStoredLocale(),
-  )
-
-  const setLocale = useCallback((next: Locale) => {
-    setLocaleState(next)
-    try {
-      localStorage.setItem(STORAGE_KEY, next)
-    } catch {
-      /* ignore */
-    }
-  }, [])
-
-  useEffect(() => {
-    document.documentElement.lang = locale === 'zh' ? 'zh-CN' : 'en'
-  }, [locale])
-
   const value = useMemo<LocaleContextValue>(
     () => ({
-      locale,
-      setLocale,
-      t: (key, vars) => translate(locale, key, vars),
-      L: (value) => pick(locale, value),
+      locale: LOCALE,
+      t: (key, vars) => translate(LOCALE, key, vars),
+      L: (value) => pick(LOCALE, value),
     }),
-    [locale, setLocale],
+    [],
   )
 
   return (

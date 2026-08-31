@@ -8,8 +8,6 @@ import {
 } from 'framer-motion'
 import { BrandMark } from './BrandMark'
 import { useLocale } from '../i18n/LocaleContext'
-import { LangSwitch } from '../i18n/LangSwitch'
-
 const ease = [0.22, 1, 0.36, 1] as const
 
 export function Nav() {
@@ -195,7 +193,6 @@ export function Nav() {
             delay: reduceMotion ? 0 : 0.34,
           }}
         >
-          <LangSwitch />
           <button
             className="nav-toggle"
             type="button"
