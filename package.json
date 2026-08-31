@@ -10,6 +10,7 @@
     "preview": "vite preview",
     "images:stores": "python3 scripts/build-store-listing-images.py",
     "images:responsive": "python3 scripts/build-responsive-images.py",
+    "fonts:vendor": "python3 scripts/vendor-google-fonts.py",
     "deploy:cn": "bash scripts/deploy-cn.sh",
     "deploy:global": "npm run images:responsive && vercel --prod",
     "deploy": "npm run deploy:global && npm run deploy:cn"
