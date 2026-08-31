@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
 import { ResponsiveImage } from '../components/ResponsiveImage'
 import { useLocale } from '../i18n/LocaleContext'
 
@@ -91,10 +90,7 @@ export function Services() {
             <h2 id="services-visit">{t('services.visit.title')}</h2>
             <p>{t('services.visit.lede')}</p>
             <div className="services-visit-actions">
-              <Link to="/stores" className="btn">
-                {t('services.visit.stores')}
-              </Link>
-              <a href="#contact" className="btn-text">
+              <a href="#contact" className="btn">
                 {t('services.visit.wechat')}
               </a>
             </div>

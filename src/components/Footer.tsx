@@ -13,7 +13,6 @@ const qrItems = [
 const navKeys = [
   { to: '/collections', key: 'footer.collections' },
   { to: '/films', key: 'footer.films' },
-  { to: '/stores', key: 'footer.stores' },
   { to: '/services', key: 'footer.services' },
   { to: '/brand', key: 'footer.brand' },
   { to: '/contact', key: 'footer.contactUs' },
