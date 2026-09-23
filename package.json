@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && python3 scripts/prerender-seo.py",
+    "build": "tsc -b && vite build && vite build --ssr src/entry-server.tsx --outDir dist-ssr && python3 scripts/prerender-seo.py",
     "images:og": "python3 scripts/build-og-images.py",
     "lint": "oxlint",
+    "seo:ping": "python3 scripts/ping-indexnow.py",
     "preview": "vite preview",
     "images:stores": "python3 scripts/build-store-listing-images.py",
     "images:responsive": "python3 scripts/build-responsive-images.py",

@@ -2,22 +2,33 @@ import { collections } from '../data/collections'
 
 export const SITE_ORIGIN = 'https://syw.fashion'
 
+/**
+ * Each route ships as <path>/index.html, which GitHub Pages serves at <path>/
+ * and 301s to from <path>. Canonical and sitemap URLs use the 200 form.
+ */
+export function canonicalUrl(path: string): string {
+  return path === '/' ? `${SITE_ORIGIN}/` : `${SITE_ORIGIN}${path}/`
+}
+
 export type SeoRoute = {
   path: string
   title: string
   description: string
   image: string
+  /** Baidu, 360 and Sogou still read the keywords tag. */
+  keywords: string
   /** Listed in sitemap.xml. Unlinked pages stay reachable but unlisted. */
   sitemap: boolean
 }
 
 const DEFAULT_IMAGE = '/assets/share/og.jpg'
+const BRAND_KEYWORDS = 'SYW,SYW官网,SYW官方网站,SYW品牌,SYW成衣,SYW配饰'
 
 export function seoRoutes(): SeoRoute[] {
-  const pages: SeoRoute[] = [
+  const pages: Omit<SeoRoute, 'keywords'>[] = [
     {
       path: '/',
-      title: 'SYW',
+      title: 'SYW 官方网站 | 成衣与配饰品牌',
       description: 'SYW — 成衣与配饰，以卓越品质与持久设计为核心。',
       image: DEFAULT_IMAGE,
       sitemap: true,
@@ -76,10 +87,11 @@ export function seoRoutes(): SeoRoute[] {
     })
   }
 
-  return pages
+  return pages.map((page) => ({ ...page, keywords: BRAND_KEYWORDS }))
 }
 
 export function seoForPath(pathname: string): SeoRoute {
   const routes = seoRoutes()
-  return routes.find((route) => route.path === pathname) ?? routes[0]
+  const path = pathname.length > 1 ? pathname.replace(/\/+$/, '') : pathname
+  return routes.find((route) => route.path === path) ?? routes[0]
 }

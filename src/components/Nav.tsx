@@ -29,7 +29,7 @@ export function Nav() {
 
   // Shrink with the first-scene cut (one light swipe ≈ one viewport)
   const logoScale = useTransform(scrollY, (y) => {
-    if (reduceMotion || !onHome) return 1
+    if (reduceMotion || !onHome || y <= 0) return 1
     const span = Math.max(280, window.innerHeight * 0.72)
     const t = Math.min(1, Math.max(0, y / span))
     return 1 - t * 0.74

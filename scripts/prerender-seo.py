@@ -1,110 +1,85 @@
 #!/usr/bin/env python3
-"""Stamp per-route title/description/OG onto copies of the Vite HTML shell.
+"""Write a fully rendered HTML file per route, plus sitemap.xml and robots.txt.
 
 GitHub Pages has no rewrite rules. A real file at dist/collections/aw26/index.html
-makes that URL return HTTP 200 instead of 404, so crawlers (and WeChat, which
-does not run JavaScript) can read the tags.
+makes that URL return HTTP 200 instead of 404. Each file carries the route's
+title/description/OG tags and its server-rendered page body, because Baidu,
+360, Sogou and WeChat read the raw HTML and mostly do not run JavaScript.
+
+Route metadata comes from src/seo/routes.ts via the SSR bundle, so the app and
+this script can no longer drift apart.
 """
 
 from __future__ import annotations
 
+import json
 import re
+import subprocess
+from datetime import date
+from html import escape
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 DIST = ROOT / "dist"
-ORIGIN = "https://syw.fashion"
-DEFAULT_IMAGE = "/assets/share/og.jpg"
 
-# Keep in lockstep with src/seo/routes.ts
-PAGES: list[dict] = [
-    {
-        "path": "/",
-        "title": "SYW",
-        "description": "SYW — 成衣与配饰，以卓越品质与持久设计为核心。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": True,
-    },
-    {
-        "path": "/collections",
-        "title": "系列 | SYW",
-        "description": "SYW 成衣系列：Ridge、Rise、Quiet Form、Daylight、Away。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": True,
-    },
-    {
-        "path": "/films",
-        "title": "品牌视频 | SYW",
-        "description": "SYW 品牌短片与系列影像。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": True,
-    },
-    {
-        "path": "/services",
-        "title": "服务 | SYW",
-        "description": "尺码、现货与到店试穿，通过官方微信咨询。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": True,
-    },
-    {
-        "path": "/brand",
-        "title": "关于我们 | SYW",
-        "description": "SYW 成衣与配饰品牌。穿得好看，也穿得自在。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": True,
-    },
-    {
-        "path": "/contact",
-        "title": "加盟合作 | SYW",
-        "description": "SYW 加盟与合作咨询，请通过官方微信联系。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": True,
-    },
-    {
-        "path": "/stores",
-        "title": "门店 | SYW",
-        "description": "添加官方微信，咨询门店地址、营业时间与当季在售款式。",
-        "image": DEFAULT_IMAGE,
-        "sitemap": False,
-    },
-]
+# Paste the codes from each webmaster console here, then rebuild and deploy.
+# 百度 ziyuan.baidu.com · 360 zhanzhang.so.com · 搜狗 zhanzhang.sogou.com · 必应 bing.com/webmasters
+SITE_VERIFICATION: dict[str, str] = {
+    "baidu-site-verification": "",
+    "360-site-verification": "",
+    "sogou_site_verification": "",
+    "msvalidate.01": "",
+}
 
 
-def parse_collections() -> list[dict]:
-    text = (ROOT / "src" / "data" / "collections.ts").read_text(encoding="utf-8")
-    blocks = re.findall(
-        r"slug:\s*'([^']+)'\s*,\s*title:\s*'([^']+)'\s*,\s*"
-        r"season:\s*\{\s*zh:\s*'([^']+)'[\s\S]*?year:\s*'(\d+)'\s*,\s*"
-        r"summary:\s*\{\s*zh:\s*'([^']+)'",
-        text,
-    )
-    if len(blocks) < 5:
-        raise SystemExit(f"expected at least 5 collections, parsed {len(blocks)}")
-    pages = []
-    for slug, title, season, year, summary in blocks:
-        pages.append(
+def load_routes() -> tuple[str, list[dict], dict[str, str]]:
+    out = subprocess.run(
+        ["node", str(ROOT / "scripts" / "render-routes.mjs")],
+        check=True,
+        capture_output=True,
+        text=True,
+    ).stdout
+    data = json.loads(out)
+    return data["origin"], data["routes"], data["html"]
+
+
+def abs_url(origin: str, path: str) -> str:
+    # Mirrors canonicalUrl() in src/seo/routes.ts: the trailing-slash form is the 200.
+    return f"{origin}/" if path == "/" else f"{origin}{path}/"
+
+
+def structured_data(origin: str) -> str:
+    graph = {
+        "@context": "https://schema.org",
+        "@graph": [
             {
-                "path": f"/collections/{slug}",
-                "title": f"{title} {year} {season}系列 | SYW",
-                "description": f"{title}，SYW {year} {season}系列。{summary}",
-                "image": f"/assets/share/og-{slug}.jpg",
-                "sitemap": True,
-            }
-        )
-    return pages
+                "@type": "Organization",
+                "@id": f"{origin}/#org",
+                "name": "SYW",
+                "alternateName": ["SYW官网", "SYW 官方网站"],
+                "url": f"{origin}/",
+                "logo": f"{origin}/apple-touch-icon.png",
+                "description": "SYW 成衣与配饰品牌，以卓越品质与持久设计为核心。",
+            },
+            {
+                "@type": "WebSite",
+                "@id": f"{origin}/#site",
+                "name": "SYW 官方网站",
+                "url": f"{origin}/",
+                "inLanguage": "zh-CN",
+                "publisher": {"@id": f"{origin}/#org"},
+            },
+        ],
+    }
+    body = json.dumps(graph, ensure_ascii=False, indent=2).replace("</", "<\\/")
+    return f'    <script type="application/ld+json">\n{body}\n    </script>'
 
 
-def abs_url(path: str) -> str:
-    if path == "/":
-        return f"{ORIGIN}/"
-    return f"{ORIGIN}{path}"
-
-
-def inject(html: str, page: dict) -> str:
-    url = abs_url(page["path"])
-    image = f"{ORIGIN}{page['image']}"
-    title = page["title"]
-    desc = page["description"]
+def inject(html: str, origin: str, page: dict, markup: str) -> str:
+    url = abs_url(origin, page["path"])
+    image = f"{origin}{page['image']}"
+    title = escape(page["title"])
+    desc = escape(page["description"])
 
     html = re.sub(r"<title>[^<]*</title>", f"<title>{title}</title>", html, count=1)
     html = re.sub(
@@ -114,25 +89,31 @@ def inject(html: str, page: dict) -> str:
         count=1,
     )
 
-    extra = "\n".join(
-        [
-            f'    <link rel="canonical" href="{url}" />',
-            f'    <meta property="og:site_name" content="SYW" />',
-            '    <meta property="og:type" content="website" />',
-            '    <meta property="og:locale" content="zh_CN" />',
-            f'    <meta property="og:title" content="{title}" />',
-            f'    <meta property="og:description" content="{desc}" />',
-            f'    <meta property="og:url" content="{url}" />',
-            f'    <meta property="og:image" content="{image}" />',
-            '    <meta property="og:image:width" content="1200" />',
-            '    <meta property="og:image:height" content="630" />',
-            '    <meta name="twitter:card" content="summary_large_image" />',
-            f'    <meta name="twitter:title" content="{title}" />',
-            f'    <meta name="twitter:description" content="{desc}" />',
-            f'    <meta name="twitter:image" content="{image}" />',
+    lines = [
+        f'    <meta name="keywords" content="{escape(page["keywords"])}" />',
+        f'    <link rel="canonical" href="{url}" />',
+        '    <meta property="og:site_name" content="SYW" />',
+        '    <meta property="og:type" content="website" />',
+        '    <meta property="og:locale" content="zh_CN" />',
+        f'    <meta property="og:title" content="{title}" />',
+        f'    <meta property="og:description" content="{desc}" />',
+        f'    <meta property="og:url" content="{url}" />',
+        f'    <meta property="og:image" content="{image}" />',
+        '    <meta property="og:image:width" content="1200" />',
+        '    <meta property="og:image:height" content="630" />',
+        '    <meta name="twitter:card" content="summary_large_image" />',
+        f'    <meta name="twitter:title" content="{title}" />',
+        f'    <meta name="twitter:description" content="{desc}" />',
+        f'    <meta name="twitter:image" content="{image}" />',
+    ]
+    if page["path"] == "/":
+        lines += [
+            f'    <meta name="{name}" content="{escape(code)}" />'
+            for name, code in SITE_VERIFICATION.items()
+            if code
         ]
-    )
-    html = html.replace("<title>", extra + "\n    <title>", 1)
+        lines.append(structured_data(origin))
+    html = html.replace("<title>", "\n".join(lines) + "\n    <title>", 1)
 
     # Hero preload is only useful on the homepage.
     if page["path"] != "/":
@@ -143,12 +124,8 @@ def inject(html: str, page: dict) -> str:
             count=1,
         )
 
-    noscript = (
-        f'    <noscript><h1>{title}</h1><p>{desc}</p></noscript>\n'
-        "    <div id=\"root\"></div>"
-    )
-    html = html.replace('<div id="root"></div>', noscript, 1)
-    return html
+    # createRoot in main.tsx replaces this markup once the bundle loads.
+    return html.replace('<div id="root"></div>', f'<div id="root">{markup}</div>', 1)
 
 
 def dest_for(path: str) -> Path:
@@ -157,10 +134,12 @@ def dest_for(path: str) -> Path:
     return DIST / path.lstrip("/") / "index.html"
 
 
-def write_sitemap(pages: list[dict]) -> None:
-    listed = [p for p in pages if p["sitemap"]]
+def write_sitemap(origin: str, pages: list[dict]) -> None:
+    today = date.today().isoformat()
     urls = "\n".join(
-        f"  <url><loc>{abs_url(p['path'])}</loc></url>" for p in listed
+        f"  <url><loc>{abs_url(origin, p['path'])}</loc><lastmod>{today}</lastmod></url>"
+        for p in pages
+        if p["sitemap"]
     )
     (DIST / "sitemap.xml").write_text(
         '<?xml version="1.0" encoding="UTF-8"?>\n'
@@ -172,20 +151,20 @@ def write_sitemap(pages: list[dict]) -> None:
     (DIST / "robots.txt").write_text(
         "User-agent: *\n"
         "Allow: /\n"
-        f"Sitemap: {ORIGIN}/sitemap.xml\n",
+        f"Sitemap: {origin}/sitemap.xml\n",
         encoding="utf-8",
     )
 
 
 def main() -> None:
     shell = (DIST / "index.html").read_text(encoding="utf-8")
-    pages = PAGES + parse_collections()
+    origin, pages, markup = load_routes()
     for page in pages:
         dest = dest_for(page["path"])
         dest.parent.mkdir(parents=True, exist_ok=True)
-        dest.write_text(inject(shell, page), encoding="utf-8")
+        dest.write_text(inject(shell, origin, page, markup[page["path"]]), encoding="utf-8")
         print(f"  {page['path']}  →  {page['title']}")
-    write_sitemap(pages)
+    write_sitemap(origin, pages)
     print(f"wrote {len(pages)} html files, sitemap, robots.txt")
 
 

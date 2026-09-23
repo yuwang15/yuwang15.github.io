@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
-import { SITE_ORIGIN, seoForPath } from '../seo/routes'
+import { SITE_ORIGIN, canonicalUrl, seoForPath } from '../seo/routes'
 
 function upsertMeta(attr: 'name' | 'property', key: string, content: string) {
   const selector = `meta[${attr}="${key}"]`
@@ -23,11 +23,12 @@ export function DocumentMeta() {
 
   useEffect(() => {
     const seo = seoForPath(pathname)
-    const url = `${SITE_ORIGIN}${seo.path === '/' ? '/' : seo.path}`
+    const url = canonicalUrl(seo.path)
     const image = `${SITE_ORIGIN}${seo.image}`
 
     document.title = seo.title
     upsertMeta('name', 'description', seo.description)
+    upsertMeta('name', 'keywords', seo.keywords)
     upsertMeta('property', 'og:title', seo.title)
     upsertMeta('property', 'og:description', seo.description)
     upsertMeta('property', 'og:url', url)

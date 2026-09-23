@@ -224,6 +224,7 @@ export function Home() {
 
   return (
     <>
+      <h1 className="sr-only">SYW 官方网站 — 成衣与配饰品牌</h1>
       <HomeHeroIntro />
       <HomeVideoCanvas />
 

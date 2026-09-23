@@ -12,9 +12,10 @@ import { Home } from './pages/Home'
 import { Services } from './pages/Services'
 import { Stores } from './pages/Stores'
 
-export default function App() {
+/** Router-agnostic page tree, shared by the browser and the build-time prerender. */
+export function AppShell() {
   return (
-    <BrowserRouter>
+    <>
       <ScrollToTop />
       <DocumentMeta />
       <div className="site">
@@ -44,6 +45,14 @@ export default function App() {
         </main>
         <Footer />
       </div>
+    </>
+  )
+}
+
+export default function App() {
+  return (
+    <BrowserRouter>
+      <AppShell />
     </BrowserRouter>
   )
 }
